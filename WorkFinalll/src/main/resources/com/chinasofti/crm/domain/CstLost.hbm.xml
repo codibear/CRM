@@ -1,0 +1,32 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.chinasofti.crm.domain">
+    <class name="CstLost">
+        <id name="lstId">
+            <generator class="identity" />
+        </id>
+
+        <property name="lstCustNo" length="20"/>
+        <property name="lstCustName" length="20"/>
+        <property name="lstCustManagerId" length="20"/>
+        <property name="lstCustManagerName" length="20"/>
+
+        <property name="lstLostDate">
+            <column name="lstLostDate" sql-type="datetime"/>
+        </property>
+
+        <property name="lstDelay" length="10000">
+            <column name="lstDelay" sql-type="text"/>
+        </property>
+
+        <property name="lstReason" length="200"/>
+        <property name="lstStatus" length="20"/>
+        <property name="lstLastOrderDate">
+            <column name="lstLastOrderDate" sql-type="datetime"/>
+        </property>
+    </class>
+
+
+</hibernate-mapping>

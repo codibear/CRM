@@ -1,0 +1,278 @@
+package com.chinasofti.crm.action.news;
+
+
+import com.alibaba.fastjson.JSON;
+import com.chinasofti.crm.biz.NewsBiz;
+import com.chinasofti.crm.domain.News;
+import com.chinasofti.crm.domain.Page;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.ServletActionContext;
+import org.hibernate.criterion.DetachedCriteria;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+/**
+ * Created by Administrator on 2017/8/9.
+ */
+public class NewsAction extends ActionSupport {
+
+    private News news;
+    private NewsBiz newsBiz;
+//    private List<News> newses;
+    private int currentPage;
+    private int newsId;
+    private String newsName;
+    private String newsAuthor;
+    private String newsDate;
+
+
+    public String saveNews() throws IOException {
+
+        java.util.Date utilDate = new java.util.Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        System.out.print(formatter.format(utilDate));
+        news.setNewsDate(formatter.format(utilDate));
+        this.newsBiz.save(news);
+
+        HttpServletResponse response = ServletActionContext.getResponse() ;
+        PrintWriter pw=response.getWriter();
+        pw.write("保存成功！");
+        pw.flush();
+        pw.close();
+
+        return NONE;
+    }
+
+    public String deleteNews(){
+        News news=new News();
+
+        news.setNewsId(newsId);
+        this.newsBiz.delete(news);
+        return "delete";
+    }
+
+    public String updateNews() throws IOException {
+        System.out.println("<<<<<<<<<updateNews");
+      System.out.println(news.getNewsId());
+        this.newsBiz.modify(news);
+        HttpServletResponse response = ServletActionContext.getResponse();
+        PrintWriter pw=response.getWriter();
+        pw.write("修改成功！");
+        pw.flush();
+        pw.close();
+        return "update";
+    }
+    //通过ID查
+    public String findById() throws IOException {
+
+        news=this.newsBiz.loadbyid(newsId);
+         ActionContext.getContext().getValueStack().push(news);
+        return "success";
+    }
+    public String findById1() throws IOException {
+        System.out.println("findById1");
+        System.out.println("findById1"+newsId);
+        news=this.newsBiz.loadbyid(newsId);
+        ActionContext.getContext().getValueStack().push(news);
+        return "success1";
+    }
+
+    //通过ID查
+    public String findById2() throws IOException {
+
+        news=this.newsBiz.loadbyid(newsId);
+        ActionContext.getContext().getValueStack().push(news);
+        return "success2";
+    }
+
+    //模糊查询
+    public String select() throws IOException {
+        List<News> list= this.newsBiz.select(newsName);
+        Set<String> news=new HashSet<String>();
+        for (News v:list){
+            news.add(v.getNewsName());
+        }
+
+
+        HttpServletResponse response = ServletActionContext.getResponse();
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/json");
+        PrintWriter pw = response.getWriter();
+        String json = JSON.toJSONString(news);
+        pw.write(json);
+        return NONE;
+    }
+    //模糊查询
+    public String select1() throws IOException {
+        List<News> list= this.newsBiz.select1(newsAuthor);
+        Set<String> news=new HashSet<String>();
+        for (News v:list){
+            news.add(v.getNewsAuthor());
+        }
+        HttpServletResponse response = ServletActionContext.getResponse();
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/json");
+        PrintWriter pw = response.getWriter();
+        String json = JSON.toJSONString(news);
+        pw.write(json);
+        return NONE;
+    }
+    //模糊查询
+    public String select2() throws IOException {
+        List<News> list= this.newsBiz.select2(newsDate);
+        Set<String> news=new HashSet<String>();
+        for (News v:list){
+            news.add(v.getNewsDate());
+        }
+        HttpServletResponse response = ServletActionContext.getResponse();
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/json");
+        PrintWriter pw = response.getWriter();
+        String json = JSON.toJSONString(news);
+        System.out.println("模糊查询"+list);
+        pw.write(json);
+        return NONE;
+    }
+    //多条件查询
+    public String find()throws Exception{
+        List<String> list=new ArrayList();
+        List<News> news=null;
+        String sql="from News where 1=1 ";
+        if (newsName!=""){
+            sql+=" and newsName="+"?";
+            list.add(newsName);
+        }if (newsAuthor!=""){
+            sql+=" and newsAuthor=?";
+            list.add(newsAuthor);
+        }
+        if (newsDate!=""){
+            sql+=" and newsDate=?";
+            list.add(newsDate);
+        }
+        System.out.println(sql);
+
+        String[] p = new String[list.size()];
+
+        list.toArray(p);//将转化后的数组放入已经创建好的对象中
+        news=newsBiz.find(sql,p);
+        System.out.println(news);
+//        for (String s:list){
+////            System.out.println(s);
+//            String[] p={s};
+////            System.out.println(sql);
+//            news=newsBiz.find(sql,p);
+////            System.out.println(news);
+//        }
+        HttpServletResponse response = ServletActionContext.getResponse();
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/json");
+        PrintWriter pw = response.getWriter();
+        String json = JSON.toJSONString(news);
+        pw.write(json);
+        return NONE;
+
+    }
+
+    //    查询所有
+    public String findNews() throws IOException {
+
+        List<News> news= this.newsBiz.findAll();
+
+        HttpServletResponse response= ServletActionContext.getResponse();
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/json");
+
+        PrintWriter px= response.getWriter();
+        String json= JSON.toJSONString(news);
+
+        px.write(json);
+
+        return NONE;
+    }
+
+
+    //分页查询
+    public String pageList() throws Exception {
+        System.out.print("当前页"+currentPage);
+        //第一步先获取DetachedCriteria对象
+        DetachedCriteria dc = DetachedCriteria.forClass(News.class);
+
+        //第二步：调用biz层find方法，获取page对象
+
+        Page page = newsBiz.find(dc, currentPage, 5);
+        //第三步：将page对象进行json转换
+        HttpServletResponse response = ServletActionContext.getResponse();
+        response.setCharacterEncoding("UTF-8");
+        //将文件的类型设置为json格式
+        response.setContentType("text/json");
+        PrintWriter out = response.getWriter();
+        String jsonStr = JSON.toJSONString(page);
+        out.write(jsonStr);
+        return NONE;
+    }
+
+    public News getNews() {
+        return news;
+    }
+
+    public void setNews(News news) {
+        this.news = news;
+    }
+
+    public NewsBiz getNewsBiz() {
+        return newsBiz;
+    }
+
+    public void setNewsBiz(NewsBiz newsBiz) {
+        this.newsBiz = newsBiz;
+    }
+
+
+    public int getNewsId() {
+        return newsId;
+    }
+
+    public void setNewsId(int newsId) {
+        this.newsId = newsId;
+    }
+
+    public int getCurrentPage() {
+        return currentPage;
+    }
+
+    public void setCurrentPage(int currentPage) {
+        this.currentPage = currentPage;
+    }
+
+    public String getNewsName() {
+        return newsName;
+    }
+
+    public void setNewsName(String newsName) {
+        this.newsName = newsName;
+    }
+
+    public String getNewsAuthor() {
+        return newsAuthor;
+    }
+
+    public void setNewsAuthor(String newsAuthor) {
+        this.newsAuthor = newsAuthor;
+    }
+
+    public String getNewsDate() {
+        return newsDate;
+    }
+
+    public void setNewsDate(String newsDate) {
+        this.newsDate = newsDate;
+    }
+}

@@ -1,0 +1,26 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.chinasofti.crm.domain">
+    <class name="Power">
+        <id name="powerId">
+            <generator class="identity" />
+        </id>
+        <many-to-one name="power" class="com.chinasofti.crm.domain.Power">
+            <column name="pId"/>
+        </many-to-one>
+        <property name="powerName"/>
+        <property name="powerType"/>
+        <property name="powerUrl"/>
+        <property name="powerCode"/>
+        <set name="roles" table="powerandrole">
+            <key column="powerId"></key>
+            <many-to-many column="roleId" class="com.chinasofti.crm.domain.Role"></many-to-many>
+        </set>
+        <set name="powers" inverse="true">
+            <key><column name="pId"/></key>
+            <one-to-many class="com.chinasofti.crm.domain.Power"/>
+        </set>
+    </class>
+</hibernate-mapping>

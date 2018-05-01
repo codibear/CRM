@@ -1,0 +1,26 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.chinasofti.crm.domain">
+    <class name="Service">
+        <id name="serviceId">
+            <generator class="assigned" />
+        </id>
+        <property name="serviceType" length="50"/>
+        <property name="serviceOutline" length="255" />
+        <property name="cusName" length="50"  />
+        <property name="serviceState" length="10"/>
+        <property name="serviceRequest"/>
+        <property name="serviceCreateUser" length="50" />
+        <property name="serviceCreateTime" />
+        <property name="serviceAlloUser" length="50" />
+        <property name="serviceAlloTime" />
+        <property name="serviceDealUser" length="50" />
+        <property name="serviceDealTime"/>
+        <property name="serviceDealContent" />
+        <property name="serviceDealResult" />
+        <property name="serviceSatisfy" length="20" />
+        <property name="pinyin" length="255" />
+    </class>
+</hibernate-mapping>

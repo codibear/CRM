@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <!--在spring管理之下的所有对象，没人都是单例状态，而struts中的Action都是多实例
+    所以scope设置为prototype
+
+    com.chinasofti.crm.action.SalesOpp.SalesAction
+    -->
+    <bean id="salesAction" class="com.chinasofti.crm.action.salesOpp.SalesAction">
+
+        <property name="salesBiz" ref="salesBiz"/>
+
+        <property name="userBiz" ref="userBiz"/>
+
+
+    </bean>
+
+    <bean id="planAction" class="com.chinasofti.crm.action.salesOpp.PlanAction">
+        <property name="planBiz" ref="planBiz"/>
+        <property name="salesBiz" ref="salesBiz"/>
+    </bean>
+
+    <bean id="exportExcel" class="com.chinasofti.crm.utils.ExportExcel"></bean>
+    <bean id="customerAction" class="com.chinasofti.crm.action.customer.CustomerAction">
+
+        <property name="customerBiz" ref="customerBiz"/>
+        <property name="exportExcel" ref="exportExcel" />
+        <property name="userBiz" ref="userBiz"/>
+        <property name="dataDictionaryBiz" ref="dataDictionaryBiz"/>
+
+
+    </bean>
+    <!---客户管理**************************-->
+    <bean id="cstConAction" class="com.chinasofti.crm.action.customer.CstConAction">
+        <property name="cstConBiz" ref="cstConBiz"/>
+        <property name="customerBiz" ref="customerBiz"/>
+        <property name="exportExcel" ref="exportExcel" />
+    </bean>
+    <bean id="cstLinkmanAction" class="com.chinasofti.crm.action.customer.CstLinkmanAction">
+        <property name="cstLinkmanBiz" ref="cstLinkmanBiz"/>
+        <property name="customerBiz" ref="customerBiz" />
+        <property name="exportExcel" ref="exportExcel" />
+    </bean>
+    <bean id="cstLostAction" class="com.chinasofti.crm.action.customer.CstLostAction">
+        <property name="cstLostBiz" ref="cstLostBiz"/>
+        <property name="exportExcel" ref="exportExcel" />
+    </bean>
+    <bean id="goodsAction" class="com.chinasofti.crm.action.customer.GoodsAction">
+        <property name="goodsBiz" ref="goodsBiz"/>
+    </bean>
+    <bean id="goodsAndOrderAction" class="com.chinasofti.crm.action.customer.GoodsAndOrderAction">
+        <property name="goodsAndOrderBiz" ref="goodsAndOrderBiz"/>
+    </bean>
+    <bean id="ordersAction" class="com.chinasofti.crm.action.customer.OrdersAction">
+        <property name="orderBiz" ref="orderBiz"/>
+        <property name="customerBiz" ref="customerBiz" />
+        <property name="goodsBiz" ref="goodsBiz" />
+        <property name="exportExcel" ref="exportExcel" />
+    </bean>
+    <!---服务管理-->
+    <bean id="serviceAction" class="com.chinasofti.crm.action.service.ServiceAction">
+        <property name="serviceBiz" ref="serviceBiz" />
+        <property name="customerBiz" ref="customerBiz" />
+        <property name="dataDictionaryBiz" ref="dataDictionaryBiz" />
+    </bean>
+    <bean id="load" class="com.chinasofti.crm.action.service.Load">
+        <property name="serviceBiz" ref="serviceBiz" />
+    </bean>
+
+    <!--News-->
+    <bean id="newsAction" class="com.chinasofti.crm.action.news.NewsAction">
+        <property name="newsBiz" ref="newsBiz" />
+    </bean>
+    <!--统计报表-->
+    <bean id="staReportAction" class="com.chinasofti.crm.action.statisticalReport.StaReportAction">
+        <property name="staReportBiz" ref="staReportBiz" />
+    </bean>
+
+    <!--日志记录-->
+    <bean id="loggingAction" class="com.chinasofti.crm.action.sysManage.LoggingAction">
+        <property name="loggingBiz" ref="loggingBiz"/>
+    </bean>
+
+    <!--权限管理-->
+    <!--权限管理之员工-->
+    <bean id="userAction" class="com.chinasofti.crm.action.privilegeManage.UserAction">
+        <property name="userBiz" ref="userBiz"></property>
+        <property name="userRealm" ref="userRealm"/>
+    </bean>
+
+    <!--权限管理之角色-->
+    <bean id="roleAction" class="com.chinasofti.crm.action.privilegeManage.RoleAction">
+        <property name="roleBiz" ref="roleBiz"></property>
+    </bean>
+
+    <!--权限管理之权限-->
+    <bean id="powerAction" class="com.chinasofti.crm.action.privilegeManage.PowerAction">
+        <property name="powerBiz" ref="powerBiz"></property>
+    </bean>
+
+    <!--zero报表-->
+    <bean id="downTest" class="com.chinasofti.crm.action.salesOpp.DownTest">
+        <property name="salesBiz" ref="salesBiz"/>
+    </bean>
+
+    <!--库存管理-->
+    <bean id="stockAction" class="com.chinasofti.crm.action.basicData.StockAction">
+        <property name="stockBiz" ref="stockBiz" />
+    </bean>
+    <!--轮播管理-->
+    <bean id="lunboAction" class="com.chinasofti.crm.action.news.LunboAction">
+        <property name="lunboBiz" ref="lunboBiz" />
+    </bean>
+    <!--数据字典-->
+    <bean id="dataDictionaryAction" class="com.chinasofti.crm.action.basicData.DataDictionaryAction">
+        <property name="dataDictionaryBiz" ref="dataDictionaryBiz"/>
+    </bean>
+
+
+    <!--报价系统-->
+    <bean id="quotationAction" class="com.chinasofti.crm.action.quotation.QuotationAction" scope="prototype">
+        <property name="quotationBiz" ref="quotationBiz"/>
+        <property name="userBiz" ref="userBiz"/>
+
+    </bean>
+    <!--报价系统-报价审核-->
+    <bean id="quotationSelAction" class="com.chinasofti.crm.action.quotation.QuotationSelAction" scope="prototype">
+
+        <property name="quotationBiz" ref="quotationBiz"/>
+    </bean>
+    <!--报价系统-报价处理-->
+    <bean id="quotationProAction" class="com.chinasofti.crm.action.quotation.QuotationProAction" scope="prototype">
+        <property name="quotationBiz" ref="quotationBiz"/>
+        <property name="quotationStatusBiz" ref="quotationStatusBiz"/>
+    </bean>
+    <!--报价处理方案-->
+    <bean id="quotationProcessAction" class="com.chinasofti.crm.action.quotation.QuotationProcessAction" scope="prototype">
+        <property name="quotationBiz" ref="quotationBiz"/>
+        <property name="quotationStatusBiz" ref="quotationStatusBiz"/>
+        <property name="orderBiz" ref="orderBiz"/>
+
+    </bean>
+    <bean id="quotationPageAction" class="com.chinasofti.crm.action.quotation.QuotationPageAction">
+        <property name="quotationBiz" ref="quotationBiz"/>
+    </bean>
+
+
+
+<!--系统管理-->
+    <!--备份和还原数据库-->
+    <bean id="mySqlAction" class="com.chinasofti.crm.action.sysManage.MySqlAction"  scope="prototype">
+        <property name="mySqlBiz" ref="mySqlBiz"/>
+    </bean>
+    <!--title ＆ logo-->
+    <bean id="titleAndLogoAction" class="com.chinasofti.crm.action.statisticalReport.TitleAndLogoAction">
+        <property name="titleAndLogoBiz" ref="titleAndLogoBiz"/>
+    </bean>
+    <bean id="fileUpAction" class="com.chinasofti.crm.action.statisticalReport.FileUploadAction">
+        <property name="titleAndLogoBiz" ref="titleAndLogoBiz"/>
+    </bean>
+
+
+    <bean id="downexcle" class="com.chinasofti.crm.action.sysManage.DownloadExcel"  scope="prototype">
+        <property name="loggingBiz" ref="loggingBiz"></property>
+    </bean>
+</beans>

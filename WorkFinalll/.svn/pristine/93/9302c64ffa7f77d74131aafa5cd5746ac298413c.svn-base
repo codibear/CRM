@@ -1,0 +1,270 @@
+package com.chinasofti.crm.action.customer;
+
+import com.alibaba.fastjson.JSON;
+import com.chinasofti.crm.biz.CustomerBiz;
+import com.chinasofti.crm.biz.GoodsBiz;
+import com.chinasofti.crm.biz.OrderBiz;
+import com.chinasofti.crm.domain.Customer;
+import com.chinasofti.crm.domain.Goods;
+import com.chinasofti.crm.domain.Orders;
+import com.chinasofti.crm.domain.Page;
+import com.chinasofti.crm.utils.ExportExcel;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.ServletActionContext;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+/**
+ * Created by Administrator on 2017/8/9.
+ */
+public class OrdersAction extends ActionSupport {
+    private Orders order;
+    private OrderBiz orderBiz;
+    private CustomerBiz customerBiz;
+    private GoodsBiz goodsBiz;
+    private int currentPage;
+    private Customer customer;
+    private String goodsNo;
+    private int paixu;
+    private ExportExcel<Orders> exportExcel;
+
+    //商品总数量
+    private int goodsnum;
+
+    private Integer id;
+    private int orderId;
+
+
+    //导出Excel表格的方法
+    public String exportExcel() throws FileNotFoundException {
+        String path = ServletActionContext.getServletContext().getRealPath("/upload") ;
+        System.out.println(path);
+
+        File filePath = new File(path) ;
+
+        //如果上传保存路径不存在，则创建
+        if(!filePath.exists()) {
+            filePath.mkdirs() ;
+        }
+        path=path+"\\";
+        List<Orders> orderses = this.orderBiz.find("from Orders where custId=?", id);
+        Collection<Orders> c = orderses;
+        String[] headers = {"编号", "客户编号", "客户名称", "订单时间", "送货地址", "订单金额", "订单状态", "商品ID"};
+        OutputStream out = new FileOutputStream(path+"ordersExcel.xls");
+        this.exportExcel.exportExcel("订单表", headers, c, out, "yyyy-MM-dd");
+        return NONE;
+    }
+
+
+    //查看订单明细方法
+    public String details1() throws Exception {
+        System.out.println("订单编号是：" + orderId);
+
+
+        //获取订单编号后，查找出订单对象
+        order = orderBiz.loadbyid(orderId);
+
+
+        //获得商品编号
+        Set<Goods> goodses = order.getGoodses();
+        System.out.println("商品的数量是：" + goodses.size());
+
+        ActionContext.getContext().getValueStack().push(order);
+        ActionContext.getContext().getValueStack().set("goodses", goodses);
+        return "details";
+    }
+
+
+    public String create() {
+        ActionContext.getContext().getValueStack().push(id);
+        customer = customerBiz.loadbyid(id);
+        ActionContext.getContext().getValueStack().set("customer", customer);
+        return "ordercreate";
+    }
+
+    public String baocun() {
+        //先通过id获取Customer对象
+        System.out.println("。。。。客户编号是" + id);
+        customer = customerBiz.loadbyid(id);
+        //将Customer对象放入订单对象中
+        order.setCustomer(customer);
+
+        HttpServletRequest request = ServletActionContext.getRequest();
+        request.getParameter("goodsnum");
+        //将商品集合放入到订单中
+        Set<Goods> goodsSet = new HashSet<Goods>();
+        for (int i = 0; i < goodsnum; i++) {
+            String str = "goodsNo" + i;
+            System.out.println(str);
+            //获取商品编号
+            System.out.println(request.getParameter(str));
+
+            System.out.println("商品编号-----" + request.getParameter(str));
+
+            int goods_id = Integer.parseInt(request.getParameter(str));
+            System.out.println(goods_id);
+            //然后获取商品对象
+            Goods goods = goodsBiz.loadbyid(goods_id);
+            goodsSet.add(goods);
+        }
+
+        //测试商品有几个
+        System.out.println(goodsSet.size());
+
+        order.setGoodses(goodsSet);
+        this.orderBiz.save(order);
+        int id = customer.getId();
+        ActionContext.getContext().getValueStack().set("id", id);
+        return "orderback";
+    }
+
+    public String modify() {
+        this.orderBiz.modify(order);
+        return "success";
+    }
+
+    public String delete() {
+        this.orderBiz.delete(order);
+        return "success";
+    }
+
+    public String list() throws Exception {
+        System.out.println("客户ID是：" + id);
+        Customer customer = customerBiz.loadbyid(id);
+
+        List<Orders> orderses = this.orderBiz.find("from Orders where custId=?", id);
+        System.out.print("一共有" + orderses.size() + "人");
+
+        ActionContext.getContext().getValueStack().set("customer", customer);
+        ActionContext.getContext().getValueStack().set("orderses", orderses);
+        return "list";
+    }
+
+    //客户联系人分页查找方法
+    public String pageList() throws Exception {
+        //第一步先获取DetachedCriteria对象
+        DetachedCriteria dc = DetachedCriteria.forClass(Orders.class);
+        Customer customer = this.customerBiz.loadbyid(id);
+        dc.add(Restrictions.eq("customer", customer));
+
+        //根据时间进行排序
+        if (paixu == 2) {
+            dc.addOrder(Order.desc("orderTime"));
+        } else {
+            dc.addOrder(Order.asc("orderTime"));
+        }
+
+        ActionContext.getContext().getValueStack().set("customer", customer);
+        String sql = "custId=" + id;
+        System.out.println("条件语句：" + sql);
+        //第二步：调用biz层find方法，获取page对象
+        Page page = orderBiz.find(dc, currentPage, 3, sql);
+
+        //第三步：将page对象进行json转换
+        HttpServletResponse response = ServletActionContext.getResponse();
+        response.setCharacterEncoding("UTF-8");
+        //将文件的类型设置为json格式
+        response.setContentType("text/json");
+        PrintWriter out = response.getWriter();
+        String jsonStr = JSON.toJSONString(page);
+        out.write(jsonStr);
+        return NONE;
+
+
+    }
+
+
+    public Orders getOrder() {
+        return order;
+    }
+
+    public void setOrder(Orders order) {
+        this.order = order;
+    }
+
+    public OrderBiz getOrderBiz() {
+        return orderBiz;
+    }
+
+    public void setOrderBiz(OrderBiz orderBiz) {
+        this.orderBiz = orderBiz;
+    }
+
+    public int getCurrentPage() {
+        return currentPage;
+    }
+
+    public void setCurrentPage(int currentPage) {
+        this.currentPage = currentPage;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setCustomerBiz(CustomerBiz customerBiz) {
+        this.customerBiz = customerBiz;
+    }
+
+    public String getGoodsNo() {
+        return goodsNo;
+    }
+
+    public void setGoodsNo(String goodsNo) {
+        this.goodsNo = goodsNo;
+    }
+
+    public void setGoodsBiz(GoodsBiz goodsBiz) {
+        this.goodsBiz = goodsBiz;
+    }
+
+    public int getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
+    }
+
+    public int getGoodsnum() {
+        return goodsnum;
+    }
+
+    public void setGoodsnum(int goodsnum) {
+        this.goodsnum = goodsnum;
+    }
+
+    public int getPaixu() {
+        return paixu;
+    }
+
+    public void setPaixu(int paixu) {
+        this.paixu = paixu;
+    }
+
+    public void setExportExcel(ExportExcel<Orders> exportExcel) {
+        this.exportExcel = exportExcel;
+    }
+}

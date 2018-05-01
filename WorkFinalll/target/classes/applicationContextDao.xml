@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--销售机会管理-->
+    <bean id="salesDao" class="com.chinasofti.crm.dao.impl.SalesDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <!--客户管理-->
+    <bean id="customerDao" class="com.chinasofti.crm.dao.impl.CustomerDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="planDao" class="com.chinasofti.crm.dao.impl.PlanDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="cstLinkmanDao" class="com.chinasofti.crm.dao.impl.CstLinkmanDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="cstLostDao" class="com.chinasofti.crm.dao.impl.CstLostDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <!--商品-->
+    <bean id="goodsDao" class="com.chinasofti.crm.dao.impl.GoodsDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <!--订单-->
+    <bean id="orderDao" class="com.chinasofti.crm.dao.impl.OrderDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <!--交往记录-->
+    <bean id="cstConDao" class="com.chinasofti.crm.dao.impl.CstConDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <!--商品订单关系-->
+    <bean id="goodsAndOrderDao" class="com.chinasofti.crm.dao.impl.GoodsAndOrderDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <!--将服务模块进行session托管-->
+    <bean id="serviceDao" class="com.chinasofti.crm.dao.impl.ServiceDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <!--将News模块进行session托管-->
+    <bean id="newsDao" class="com.chinasofti.crm.dao.impl.NewsDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+    <!--统计报表-->
+    <bean id="staReportDao" class="com.chinasofti.crm.dao.impl.StaReportDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <!--日志记录-->
+    <bean id="loggingDao" class="com.chinasofti.crm.dao.impl.LoggingDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+
+    <!--权限管理-->
+
+    <!--权限管理之员工-->
+    <bean id="userDao" class="com.chinasofti.crm.dao.impl.UserDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <!--权限管理之角色-->
+    <bean id="roleDao" class="com.chinasofti.crm.dao.impl.RoleDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <!--权限管理之权限-->
+    <bean id="powerDao" class="com.chinasofti.crm.dao.impl.PowerDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <!--权限管理之角色用户-->
+    <!--<bean id="roleAndUserDao" class="com.chinasofti.crm.dao.impl.RoleAndUserDaoImpl">-->
+        <!--<property name="sessionFactory" ref="sessionFactory"/>-->
+    <!--</bean>-->
+
+    <!--权限管理之权限角色-->
+    <!--<bean id="powerAndRoleDao" class="com.chinasofti.crm.dao.impl.PowerAndRoleDaoImpl">-->
+        <!--<property name="sessionFactory" ref="sessionFactory" />-->
+    <!--</bean>-->
+
+
+    <!--查询库存-->
+    <bean id="stockDao" class="com.chinasofti.crm.dao.impl.StockDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+    <!--轮播管理-->
+    <bean id="lunboDao" class="com.chinasofti.crm.dao.impl.LunboDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+    <!--数据字典-->
+    <bean id="dataDictionaryDao" class="com.chinasofti.crm.dao.impl.DataDictionaryDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+
+    <!--报价系统-->
+    <bean id="quotationDao" class="com.chinasofti.crm.dao.impl.QuotationDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <!--报价状态数据词典-->
+    <bean id="quotationStatusDao" class="com.chinasofti.crm.dao.impl.QuotationStatusDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory"/>
+
+    </bean>
+
+
+    <!--系统管理-->
+    <!--备份还原数据库-->
+    <bean id="mySqlDao" class="com.chinasofti.crm.dao.impl.MySqlDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+    <!--title ＆ logo-->
+    <bean id="titleAndLogoDao" class="com.chinasofti.crm.dao.impl.TitleAndLogoDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+</beans>

@@ -1,0 +1,17 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.chinasofti.crm.domain">
+    <class name="Plan">
+        <id name="planId">
+            <generator class="identity"/>
+        </id>
+        <property name="planPro" length="200"/>
+        <property name="planTime" type="date"/>
+        <property name="planResult" length="25"/>
+
+        <many-to-one name="salesmanage" column="salesId" class="SalesManage"/>
+
+    </class>
+</hibernate-mapping>

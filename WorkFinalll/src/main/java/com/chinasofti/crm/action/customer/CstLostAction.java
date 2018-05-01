@@ -1,0 +1,356 @@
+package com.chinasofti.crm.action.customer;
+
+import com.alibaba.fastjson.JSON;
+import com.chinasofti.crm.biz.CstLostBiz;
+import com.chinasofti.crm.domain.CstLost;
+import com.chinasofti.crm.domain.Page;
+import com.chinasofti.crm.utils.ExportExcel;
+import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.ServletActionContext;
+import org.hibernate.criterion.DetachedCriteria;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+
+/**
+ * Created by Administrator on 2017/8/9.
+ */
+
+public class CstLostAction extends ActionSupport {
+    private CstLostBiz cstLostBiz;
+    private CstLost cstLost;
+    private int currentPage;
+    private String lstCustName;
+    private String lstCustManagerName;
+    private String lstStatus;
+    private ExportExcel<CstLost> exportExcel;
+    private String userId;
+    private InputStream inputStream;
+    private String pathName;
+    private String fileName;
+    private long contentLength;
+
+
+    public ExportExcel<CstLost> getExportExcel() {
+        return exportExcel;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public void setExportExcel(ExportExcel<CstLost> exportExcel) {
+        this.exportExcel = exportExcel;
+    }
+
+    public String getLstStatus() {
+        return lstStatus;
+    }
+
+    public void setLstStatus(String lstStatus) {
+        this.lstStatus = lstStatus;
+    }
+
+    public String getLstCustName() {
+        return lstCustName;
+    }
+
+    public void setLstCustName(String lstCustName) {
+        this.lstCustName = lstCustName;
+    }
+
+    public String getLstCustManagerName() {
+        return lstCustManagerName;
+    }
+
+    public void setLstCustManagerName(String lstCustManagerName) {
+        this.lstCustManagerName = lstCustManagerName;
+    }
+
+
+    public int getCurrentPage() {
+        return currentPage;
+    }
+
+    public void setCurrentPage(int currentPage) {
+        this.currentPage = currentPage;
+    }
+
+    public CstLost getCstLost() {
+        return cstLost;
+    }
+
+    public void setCstLost(CstLost cstLost) {
+        this.cstLost = cstLost;
+    }
+
+    public CstLostBiz getCstLostBiz() {
+        return cstLostBiz;
+    }
+
+    public void setCstLostBiz(CstLostBiz cstLostBiz) {
+        this.cstLostBiz = cstLostBiz;
+    }
+//      jianchakehuliushibaio
+    public void checkCstLost() throws IOException {
+        System.out.println(
+                "888888888888888888888888888888"
+        );
+        List<CstLost> losts=cstLostBiz.find("from CstLost where lstCustManagerId=? and lstDelay=''",userId);
+        int nums=losts.size();
+        HttpServletResponse response = ServletActionContext.getResponse();
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/json");
+        PrintWriter pw = response.getWriter();
+        String json = JSON.toJSONString(nums);
+        pw.write(json);
+
+    }
+
+    //导出Excel表格的方法
+    public String exportExcel() throws FileNotFoundException {
+        String path = ServletActionContext.getServletContext().getRealPath("/upload") ;
+        System.out.println(path);
+
+        File filePath = new File(path) ;
+
+        //如果上传保存路径不存在，则创建
+        if(!filePath.exists()) {
+            filePath.mkdirs() ;
+        }
+        path=path+"\\";
+        List<CstLost> cstLosts = this.cstLostBiz.findAll();
+        Collection<CstLost> c = cstLosts;
+        String[] headers = {"编号", "客户编号", "客户名称", "客户经理编号", "客户经理姓名", "客户流失时间", "暂缓流失措施", "流失原因", "状态", "流失时间"};
+        OutputStream out = new FileOutputStream(path+"客户流失表.xls");
+        this.exportExcel.exportExcel("客户流失表", headers, c, out, "yyyy-MM-dd");
+        pathName=path+"客户流失表.xls";
+        File file = new File(pathName);
+        fileName=file.getName();
+        System.out.println(fileName);
+        inputStream=new FileInputStream(file);
+        return SUCCESS;
+    }
+
+
+    public String findById() throws ParseException {
+        HttpServletRequest request = ServletActionContext.getRequest();
+        String lstId = request.getParameter("lstId");
+        cstLost=this.cstLostBiz.loadbyid(Integer.parseInt(lstId));
+
+
+        //最后下单时间
+        String lastOrderDate = cstLost.getLstLastOrderDate();
+        Date newdate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(lastOrderDate);
+        String lastOrder = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(newdate);
+        System.out.println(lastOrder);
+
+        String lost = cstLost.getLstLostDate();
+        Date newlost = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(lost);
+        String losstime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(newlost);
+        System.out.println(losstime);
+
+        cstLost.setLstLastOrderDate(lastOrder);
+        cstLost.setLstLostDate(losstime);
+
+        request.setAttribute("cstLost", cstLost);
+        if(cstLost.getLstStatus().equals("确认流失")){
+            return "conf";
+        }else {
+            return "find";
+        }
+    }
+
+    public String confirmLoss() throws Exception{
+        HttpServletRequest request = ServletActionContext.getRequest();
+        String lstId = request.getParameter("lstId");
+        cstLost=this.cstLostBiz.loadbyid(Integer.parseInt(lstId));
+
+        //最后下单时间
+        String  lastOrderDate=cstLost.getLstLastOrderDate();
+        Date  newdate= new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(lastOrderDate);
+        String lastOrder = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(newdate);
+        System.out.println(lastOrder);
+
+        String lost=cstLost.getLstLostDate();
+        Date  newlost= new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(lost);
+        String losstime= new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(newlost);
+        System.out.println(losstime);
+
+        cstLost.setLstLastOrderDate( lastOrder);
+        cstLost.setLstLostDate(losstime);
+        request.setAttribute("cstLost", cstLost);
+        return "loss";
+    }
+    public String save() {
+
+        this.cstLostBiz.save(cstLost);
+        return "success";
+    }
+
+    public String modify() {
+        this.cstLostBiz.modify(cstLost);
+        if (cstLost.getLstStatus().equals("确认流失")) {
+            return "confirm";
+        } else {
+            return "delay";
+        }
+
+
+    }
+
+    public String delete() {
+        this.cstLostBiz.delete(cstLost);
+        return "success";
+    }
+
+    public String list() throws Exception {
+        List<CstLost> cstLosts = this.cstLostBiz.findAll();
+        HttpServletResponse response = ServletActionContext.getResponse();
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/json");
+        PrintWriter pw = response.getWriter();
+        String json = JSON.toJSONString(cstLosts);
+        pw.write(json);
+        return NONE;
+    }
+
+
+    public String pageList() throws Exception {
+
+        //第一步先获取DetachedCriteria对象
+        DetachedCriteria dc = DetachedCriteria.forClass(CstLost.class);
+        //第二步：调用biz层find方法，获取page对象
+        Page page = cstLostBiz.find(dc, currentPage, 4);
+
+        List<CstLost> cstLosts=page.getData();
+        for(int i=0;i<cstLosts.size();i++){
+            CstLost cstLost=cstLosts.get(i);
+            String  lostDate=cstLost.getLstLastOrderDate();
+            Date  newdate= new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(lostDate);
+            String lastOrder = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(newdate);
+            System.out.println(lastOrder);
+            String lost=cstLost.getLstLostDate();
+            Date  newlost= new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(lost);
+            String losstime= new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(newlost);
+            System.out.println(losstime);
+
+            cstLost.setLstLastOrderDate( lastOrder);
+            cstLost.setLstLostDate(losstime);
+            cstLosts.set(i,cstLost);
+        }
+
+        //第三步：将page对象进行json转换
+        HttpServletResponse response = ServletActionContext.getResponse();
+        response.setCharacterEncoding("UTF-8");
+        //将文件的类型设置为json格式
+        response.setContentType("text/json");
+        PrintWriter out = response.getWriter();
+        String jsonStr = JSON.toJSONString(page);
+        out.write(jsonStr);
+        return NONE;
+    }
+
+
+    public String find() throws ParseException, IOException {
+
+        List<String> list = new ArrayList();
+
+        String sql = "from CstLost where 1=1";
+
+        if (!lstCustName.equals("")) {
+
+            sql += " and lstCustName=" + "?";
+
+            list.add(lstCustName);
+
+        }
+        if (!lstCustManagerName.equals("")) {
+
+            sql += " and lstCustManagerName=?";
+
+            list.add(lstCustManagerName);
+
+        }
+        if (!lstStatus.equals("")) {
+
+            sql += " and lstStatus=?";
+
+            list.add(lstStatus);
+        }
+
+        System.out.println(sql);
+//        Object[] objects = list.toArray();//返回Object数组
+        String[] p = new String[list.size()];
+        list.toArray(p);//将转化后的数组放入已经创建好的对象中
+        List<CstLost> cstLosts = cstLostBiz.find(sql, p);
+
+        for(int i=0;i<cstLosts.size();i++){
+            System.out.println("qqqqqqqqqqqq"+i);
+            CstLost cstLost=cstLosts.get(i);
+            String  lostDate=cstLost.getLstLostDate();
+            Date  newdate=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(lostDate);
+            String lastOrder = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(newdate);
+            System.out.println(lastOrder);
+            String lost=cstLost.getLstLostDate();
+            Date  newlost=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(lost);
+            String losstime= new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(newlost);
+            System.out.println(losstime);
+
+            cstLost.setLstLastOrderDate( lastOrder);
+            cstLost.setLstLostDate(losstime);
+            cstLosts.set(i,cstLost);
+        }
+
+        HttpServletResponse response = ServletActionContext.getResponse();
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/json");
+        PrintWriter pw = response.getWriter();
+        String json = JSON.toJSONString(cstLosts);
+        pw.write(json);
+        return NONE;
+    }
+
+    public InputStream getInputStream() {
+        return inputStream;
+    }
+
+    public void setInputStream(InputStream inputStream) {
+        this.inputStream = inputStream;
+    }
+
+    public String getPathName() {
+        return pathName;
+    }
+
+    public void setPathName(String pathName) {
+        this.pathName = pathName;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public long getContentLength() {
+        return contentLength;
+    }
+
+    public void setContentLength(long contentLength) {
+        this.contentLength = contentLength;
+    }
+}

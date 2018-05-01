@@ -1,0 +1,38 @@
+ <!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+        
+<hibernate-mapping package="com.chinasofti.crm.domain">
+    <class name="Customer">
+        <id name="id">
+            <generator class="identity"/>
+        </id>
+        <property name="cusId"/>
+        <property name="cusName" length="25" not-null="true"/>
+        <property name="cusRegion" length="20"/>
+        <property name="cusManagerId" length="10"/>
+        <property name="cusManagerName" length="20"/>
+        <property name="cusLevel" length="20"/>
+        <property name="cusCreatTime"/>
+        <property name="cusSatisfy" length="20"/>
+        <property name="cusCredit" length="20"/>
+        <property name="cusAddr" length="50"/>
+        <property name="cusZip" length="10"/>
+        <property name="cusTel" length="20"/>
+        <property name="cusFax" length="20"/>
+        <property name="cusWebsite" length="20"/>
+        <property name="licenceNo" length="20"/>
+        <property name="chieftain" length="10"/>
+        <property name="bankroll">
+            <column name="backroll" sql-type="numeric(10,2)"/>
+        </property>
+        <property name="cusTurnover">
+            <column name="cusTurnover" sql-type="numeric(10,2)"/>
+        </property>
+        <property name="bank" length="50"/>
+        <property name="bankAccount" length="50"/>
+        <property name="localTaxNo" length="20"/>
+        <property name="nationalTaxNo" length="20"/>
+        <property name="status" length="10"/>
+    </class>
+</hibernate-mapping> 

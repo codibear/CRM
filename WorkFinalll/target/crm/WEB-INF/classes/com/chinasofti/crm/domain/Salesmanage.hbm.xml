@@ -1,0 +1,31 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.chinasofti.crm.domain">
+    <class name="SalesManage">
+        <id name="salesId">
+            <generator class="identity"/>
+        </id>
+        <property name="oppSource"/>
+        <property name="cusName"/>
+        <property name="succRate"/>
+        <property name="outLine"/>
+        <property name="linkName"/>
+        <property name="linkPhone"/>
+        <property name="oppDesc"/>
+        <property name="creatMan"/>
+        <property name="creatTime"/>
+
+        <property name="giveMan" not-null="false"/>
+        <property name="giveTime" not-null="false"/>
+        <property name="giveId"/>
+
+<set name="plans" inverse="true">
+
+    <key column="planId"/>
+
+    <one-to-many class="Plan"/>
+
+</set>
+    </class>
+</hibernate-mapping>

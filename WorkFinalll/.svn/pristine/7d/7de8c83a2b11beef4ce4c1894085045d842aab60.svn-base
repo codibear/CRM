@@ -1,0 +1,294 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: Amily
+  Date: 2017/8/5
+  Time: 10:40
+  To change this template use File | Settings | File Templates.
+--%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<html>
+<head>
+    <title>客户服务分析</title>
+    <script type="text/javascript" src="../js/jquery-1.8.3.min.js"></script>
+    <script src="${pageContext.request.contextPath}/plugins/hcharts/js/highcharts.js"></script>
+    <script src="${pageContext.request.contextPath}/plugins/hcharts/js/exporting.js"></script>
+    <script src="${pageContext.request.contextPath}/plugins/hcharts/js/drilldown.js"></script>
+    <script src="${pageContext.request.contextPath}/plugins/hcharts/js/export-csv.js"></script>
+    <%--&lt;%&ndash;Excel插件&ndash;%&gt;--%>
+    <%--<script src="../plugins/hcharts/js/export-csv.js"></script>--%>
+
+    <link rel="stylesheet" href="../plugins/layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="../css/main.css" />
+    <link rel="stylesheet" href="css/CustomerService.css">
+    <script>
+        var datas;
+        $(function () {
+            /*查询年份*/
+            $.get("stalist2.action", function (data) {
+                var sel = $("#selectYear").val();
+                var tr = "";
+                $(data).each(function (i, obj) {
+                    var option = "<option value='" + obj + "'>" + obj + "</option>";
+                    tr = tr + option;
+                });
+                $("#selectYear").append(tr);
+            });
+            $(function () {
+                //页直接面加载
+                var a = $("#selectYear option:selected ").text();
+
+                $.get("stalist.action", {tez: a}, function (data) {
+                    datas = data;
+                    var chart = new Highcharts.Chart('container', {
+                        /* $('#container').highcharts({*/
+                        chart: {
+                            plotBackgroundColor: null,
+                            plotBorderWidth: null,
+                            plotShadow: false
+                        },
+                        title: {
+                            text: '服务类型的占比'
+                        },
+                        tooltip: {
+                            headerFormat: '{series.name}<br>',
+                            pointFormat: '{point.name}: <b>{point.percentage:.1f}%</b>'
+                        },
+                        plotOptions: {
+                            pie: {
+                                allowPointSelect: true,
+                                cursor: 'pointer',
+                                dataLabels: {
+                                    enabled: true,
+                                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                                    style: {
+                                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                                    }
+                                }
+                            }
+                        },
+                        series: [{
+                            type: 'pie',
+                            name: '服务类型的占比',
+                            data: eval(datas),
+
+                        }]
+                    }, function () {
+                        $('.highcharts-contextbutton').click();
+                    }, 200);
+
+
+                    //柱形图
+                    var chart = new Highcharts.Chart('container1', {
+
+                        /* $('#container').highcharts({*/
+                        chart: {
+                            type: 'column'
+                        },
+                        title: {
+                            text: '服务类型'
+                        },
+                        subtitle: {
+                            text: ''
+                        },
+                        xAxis: {
+                            type: '条目'
+                        },
+                        yAxis: {
+                            title: {
+                                tickAmount: 8,
+                                text: '总数量'
+                            }
+                        },
+                        legend: {
+                            enabled: false
+                        },
+                        plotOptions: {
+                            series: {
+                                borderWidth: 0,
+                                dataLabels: {
+                                    enabled: true,
+                                    format: '{point.y:.1f}%'
+                                }
+                            }
+                        },
+                        tooltip: {
+                            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+                        },
+                        series: [{
+                            name: '服务类型',
+                            colorByPoint: true,
+                            data: datas
+                        }],
+
+                    }, function () {
+                        setTimeout(function () {
+                            $('.highcharts-contextbutton').click();
+                        }, 200)
+                    });
+                });
+
+            });
+
+            $(function () {
+                //打印
+                Highcharts.setOptions({
+                    lang: {
+                        printChart: '打印图表',
+                        downloadJPEG: '下载 JPEG 文件',
+                        downloadPDF: '下载 PDF   文件',
+                        downloadPNG: '下载 PNG  文件',
+                        downloadSVG: '下载 SVG  文件',
+                        downloadCSV: '下载 CSV  文件',
+                        downloadXLS: '下载 XLS   文件'
+                    },
+                    navigation: {
+                        menuItemStyle: {
+                            padding: '6px 14px'
+                        }
+                    },
+                    exporting: {
+                        url: 'https://export.highcharts.com.cn'
+                    },
+                    credits: {
+                        text: '简数科技',
+                        url: 'https://jianshukeji.com'
+                    }
+                });
+                /*点击按年份查询*/
+                //传数据
+                $("#layui-btn-selete").click(function () {
+
+                    var a = $("#selectYear option:selected ").text();
+                    $.get("stalist.action", {tez: a}, function (data) {
+                        datas = data;
+                        var chart = new Highcharts.Chart('container', {
+                            /* $('#container').highcharts({*/
+                            chart: {
+                                plotBackgroundColor: null,
+                                plotBorderWidth: null,
+                                plotShadow: false
+                            },
+                            title: {
+                                text: '服务类型的占比'
+                            },
+                            tooltip: {
+                                headerFormat: '{series.name}<br>',
+                                pointFormat: '{point.name}: <b>{point.percentage:.1f}%</b>'
+                            },
+                            plotOptions: {
+                                pie: {
+                                    allowPointSelect: true,
+                                    cursor: 'pointer',
+                                    dataLabels: {
+                                        enabled: true,
+                                        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                                        style: {
+                                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                                        }
+                                    }
+                                }
+                            },
+                            series: [{
+                                type: 'pie',
+                                name: '服务类型的占比',
+                                data: eval(datas),
+
+                            }]
+                        }, function () {
+                            $('.highcharts-contextbutton').click();
+                        }, 200);
+
+                    });
+                    /*饼形图*/
+                    var chart = new Highcharts.Chart('container1', {
+                        /* $('#container').highcharts({*/
+                        chart: {
+                            plotBackgroundColor: null,
+                            plotBorderWidth: null,
+                            plotShadow: false
+                        },
+                        title: {
+                            text: '服务类型的占比'
+                        },
+                        tooltip: {
+                            headerFormat: '{series.name}<br>',
+                            pointFormat: '{point.name}: <b>{point.percentage:.1f}%</b>'
+                        },
+                        plotOptions: {
+                            pie: {
+                                allowPointSelect: true,
+                                cursor: 'pointer',
+                                dataLabels: {
+                                    enabled: true,
+                                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                                    style: {
+                                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                                    }
+                                }
+                            }
+                        },
+                        series: [{
+                            type: 'pie',
+                            name: '服务类型的占比',
+                            data: datas
+
+                        }]
+                    }, function () {
+                        setTimeout(function () {
+                            $('.highcharts-contextbutton').click();
+                        },200);
+                    });
+                    });
+                });
+            });
+
+    </script>
+</head>
+<body>
+<div class="admin-main">
+    <div id="main">
+            <span class="title1">
+            <a href="">客户服务分析</a>
+
+            </span>
+        <div class="layui-btn-group globalHight">
+            <button class="layui-btn">帮助</button>
+            <button  id="layui-btn-selete"  class="layui-btn">查询</button>
+
+        </div>
+        <form id="NewSale" action="" method="post">
+            <table class="layui-table" lay-even="" lay-skin="row">
+                <colgroup >
+                    <col width="200">
+                    <col width="250">
+                    <col width="300">
+                    <col width="350">
+                </colgroup>
+
+                <tbody>
+                <tr id="rowOne">
+                    <td class="td1">年份</td>
+                    <td class="td1"  colspan="2">
+                        <%-- <span id="span">xxx</span>--%>
+                        <select id="selectYear" name="city" class="size" lay-verify="required" style="width: 180px;" >
+                            <%--用插件--%>
+                            <option  value="">全部</option>
+
+                            </option>
+
+                        </select>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </form>
+
+        <%--饼图--%>
+        <div id="container" style="min-width:400px;height:400px;display: block"></div>
+        <div id="container1" style="min-width:400px;height:400px"></div>
+    </div>
+</div>
+</body>
+</html>

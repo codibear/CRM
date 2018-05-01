@@ -1,0 +1,308 @@
+package com.chinasofti.crm.action.customer;
+
+import com.alibaba.fastjson.JSON;
+import com.chinasofti.crm.biz.CstLinkmanBiz;
+import com.chinasofti.crm.biz.CustomerBiz;
+import com.chinasofti.crm.domain.CstLinkman;
+import com.chinasofti.crm.domain.Customer;
+import com.chinasofti.crm.utils.ExportExcel;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.ServletActionContext;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+
+/**
+ * Created by Administrator on 2017/8/.
+ */
+public class CstLinkmanAction extends ActionSupport {
+    private CstLinkmanBiz cstLinkmanBiz;
+    private CstLinkman cstLinkman;
+    private int lkmId;
+    private Customer customer;
+    private int id;
+    private String lkmName;
+    private CustomerBiz customerBiz;
+    private ExportExcel<CstLinkman> exportExcel;
+    private String userId;
+    private InputStream inputStream;
+    private String pathName;
+    private String fileName;
+    private long contentLength;
+
+    public ExportExcel<CstLinkman> getExportExcel() {
+        return exportExcel;
+    }
+
+    public InputStream getInputStream() {
+        return inputStream;
+    }
+
+    public void setInputStream(InputStream inputStream) {
+        this.inputStream = inputStream;
+    }
+
+    public String getPathName() {
+        return pathName;
+    }
+
+    public void setPathName(String pathName) {
+        this.pathName = pathName;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public long getContentLength() {
+        return contentLength;
+    }
+
+    public void setContentLength(long contentLength) {
+        this.contentLength = contentLength;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public CstLinkmanBiz getCstLinkmanBiz() {
+        return cstLinkmanBiz;
+    }
+
+    public void setCstLinkmanBiz(CstLinkmanBiz cstLinkmanBiz) {
+        this.cstLinkmanBiz = cstLinkmanBiz;
+    }
+
+    public CstLinkman getCstLinkman() {
+        return cstLinkman;
+    }
+
+    public void setCstLinkman(CstLinkman cstLinkman) {
+        this.cstLinkman = cstLinkman;
+    }
+
+
+    //导出Excel表格的方法
+    public String exportExcel() throws FileNotFoundException {
+        System.out.println("客户ID是：" + id);
+        String path = ServletActionContext.getServletContext().getRealPath("/upload") ;
+        System.out.println(path);
+
+        File filePath = new File(path) ;
+
+        //如果上传保存路径不存在，则创建
+        if(!filePath.exists()) {
+            filePath.mkdirs() ;
+        }
+        path=path+"\\";
+        List<CstLinkman> cstLinkmen = this.cstLinkmanBiz.find("from CstLinkman where custId=?", id);
+        System.out.println("联系人数量是：" + cstLinkmen.size());
+        Collection<CstLinkman> c = cstLinkmen;
+        String[] headers = {"编号", "客户编号", "客户名称", "联系人姓名", "性别", "职位", "电话", "备注", "客户ID", "联系人生日"};
+        OutputStream out = new FileOutputStream(path+"客户联系人表.xls");
+        this.exportExcel.exportExcel("客户联系人表", headers, c, out, "yyyy-MM-dd");
+        pathName = path + "客户联系人表.xls";
+        File file = new File(pathName);
+        fileName = file.getName();
+        System.out.println(fileName);
+        inputStream = new FileInputStream(file);
+        return SUCCESS;
+    }
+
+
+    public String save() {
+
+        System.out.println("联系人的姓名是：" + cstLinkman.getLkmName());
+//        customer=customerBiz.loadbyid(customer.getId());
+//        System.out.println("客户ID是："+customer.getId());
+//        System.out.println("客户名称是："+customer.getCusName());
+//        int id=customer.getId();
+
+        ActionContext.getContext().getValueStack().set("id", id);
+//        cstLinkman.setCustomer(customer);
+//        cstLinkman.setLkmCustName(customer.getCusName());
+//        cstLinkman.setLkmCustNo(customer.getCusId());
+        customer = customerBiz.loadbyid(id);
+        cstLinkman.setCustomer(customer);
+        this.cstLinkmanBiz.save(cstLinkman);
+        return "back";
+    }
+
+    public String modify() {
+        System.out.println(" modify() " + id);
+        customer = this.customerBiz.loadbyid(id);
+        cstLinkman.setCustomer(customer);
+        this.cstLinkmanBiz.modify(cstLinkman);
+        ActionContext.getContext().getValueStack().set("id", id);
+        return "modifylink";
+    }
+
+    public String delete() throws IOException {
+        System.out.println(lkmId);
+        CstLinkman cstLinkman1 = (CstLinkman) this.cstLinkmanBiz.find("from CstLinkman where lkmId=?", lkmId).get(0);
+        this.cstLinkmanBiz.delete(cstLinkman1);
+        ActionContext.getContext().getValueStack().set("id", id);
+        HttpServletResponse response = ServletActionContext.getResponse();
+        response.setCharacterEncoding("UTF-8");
+        //将文件的类型设置为json格式
+        response.setContentType("text/json");
+        PrintWriter out = response.getWriter();
+        String jsonStr = JSON.toJSONString(1);
+        System.out.println(jsonStr);
+        return NONE;
+    }
+
+    //检查联系人唯一性
+    public String check_link() throws IOException {
+        HttpServletResponse response = ServletActionContext.getResponse();
+        response.setCharacterEncoding("UTF-8");
+
+        PrintWriter out = response.getWriter();
+        ;
+        try {
+            CstLinkman cstLinkman1 = (CstLinkman) this.cstLinkmanBiz.find("from CstLinkman where lkmName=?", lkmName).get(0);
+            System.out.print("bbbbbbbbbbb" + 1);
+            out.write("1");
+        } catch (Exception e) {
+            out.write("0");
+            System.out.print("bbbbbbbbbbb" + 0);
+
+        }
+        return NONE;
+
+    }
+
+    public String loadById() {
+//        int id1=Integer.parseInt(id);
+        cstLinkman = cstLinkmanBiz.loadbyid(lkmId);
+        System.out.print("11111111111111111" + lkmId);
+        ActionContext.getContext().getValueStack().set("cstLinkman", cstLinkman);
+        ActionContext.getContext().getValueStack().set("id", id);
+        System.out.println(id);
+        return "edit";
+    }
+
+    public String load2() {
+        customer = this.customerBiz.loadbyid(id);
+        ActionContext.getContext().getValueStack().set("customer", customer);
+        ActionContext.getContext().getValueStack().set("cstLinkman", cstLinkman);
+        ActionContext.getContext().getValueStack().set("id", id);
+        System.out.println("load2()" + id);
+        return "load2";
+    }
+
+    public String list() throws Exception {
+        System.out.println("aaaaaaa>>>>>>>>>" + id);
+        Customer customer = customerBiz.loadbyid(id);
+
+        List<CstLinkman> cstLinkmans = this.cstLinkmanBiz.find("from CstLinkman where custId=?", id);
+        ActionContext.getContext().getValueStack().set("id", id);
+        HttpServletResponse response = ServletActionContext.getResponse();
+        response.setCharacterEncoding("UTF-8");
+        //将文件的类型设置为json格式
+        response.setContentType("text/json");
+        PrintWriter out = response.getWriter();
+        String jsonStr = JSON.toJSONString(cstLinkmans);
+        out.write(jsonStr);
+        System.out.println(jsonStr);
+        return NONE;
+    }
+
+    public String create() {
+        ActionContext.getContext().getValueStack().push(id);
+        return "create";
+    }
+//生日提醒执行了
+    public String brithdayTips() throws Exception {
+        System.out.println("生日提醒执行了");
+        System.out.println(">>>>>>>>111111111>>>>>>>>>>"+userId);
+        List<Customer> customers=customerBiz.find("from Customer where cusManagerId=?",userId);
+        System.out.println(">>>>>>>>>>>>>>22222222>>>>>>>>>>>>>>>>>"+customers.size());
+        for (int i=0;i<customers.size();i++){
+            System.out.println("lllllllllllllllllllllllll"+customers.get(i).getId());
+            List<CstLinkman> cstLinkmans = this.cstLinkmanBiz.find("from CstLinkman where custId=?",customers.get(i).getId());
+            System.out.println(">>>>>>>>>>>>>>>>333333333>>>>>>>>>>>>>>>>>>>>"+cstLinkmans.size());
+            Date date = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String today = sdf.format(date);
+            for (int j = 0; j < cstLinkmans.size(); j++) {
+                System.out.println("gggggggggggggggggg"+cstLinkmans.get(j).getLkmId());
+                String birthday = sdf.format(cstLinkmans.get(j).getLkmBirthday());
+                String[] todays = today.split("-");
+                String[] birthdays = birthday.split("-");
+                if (todays[2].equals(birthdays[2]) && todays[1].equals(birthdays[1])) {
+                    System.out.println("啊啊古树除了上课啦啦那看来是你");
+                    cstLinkman = cstLinkmans.get(j);
+                    HttpServletResponse response = ServletActionContext.getResponse();
+                    response.setCharacterEncoding("UTF-8");
+                    response.setContentType("text/json");
+                    PrintWriter pw = response.getWriter();
+                    String json = JSON.toJSONString(cstLinkman);
+                    pw.write(json);
+                }
+            }
+        }
+
+        return NONE;
+    }
+
+
+
+    public int getLkmId() {
+        return lkmId;
+    }
+
+    public void setLkmId(int lkmId) {
+        this.lkmId = lkmId;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public CustomerBiz getCustomerBiz() {
+        return customerBiz;
+    }
+
+    public void setCustomerBiz(CustomerBiz customerBiz) {
+        this.customerBiz = customerBiz;
+    }
+
+    public String getLkmName() {
+        return lkmName;
+    }
+
+    public void setLkmName(String lkmName) {
+        this.lkmName = lkmName;
+    }
+
+    public void setExportExcel(ExportExcel<CstLinkman> exportExcel) {
+        this.exportExcel = exportExcel;
+    }
+}

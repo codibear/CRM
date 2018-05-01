@@ -1,0 +1,20 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.chinasofti.crm.domain">
+    <class name="CstCon">
+        <id name="cstConId">
+            <generator class="identity" />
+        </id>
+        <property name="cstConNo"/>
+        <property name="cstConName" />
+        <property name="cstConTime" />
+        <property name="cstConAddr" />
+        <property name="cstConTitle" />
+        <property name="cstConMeno" />
+        <property name="cstConInfo" />
+        <many-to-one name="customer" class="Customer" column="custId"  />
+    </class>
+
+</hibernate-mapping>

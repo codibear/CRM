@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <!-- Single realm app.  If you have multiple realms, use the 'realms' property instead. -->
+        <property name="realm" ref="userRealm"/><!-- 引用自定义的realm -->
+        <property name="cacheManager" ref="cacheManager"/>
+        <property name="rememberMeManager" ref="rememberMeManager"/>
+    </bean>
+
+    <bean id="userRealm" class="com.chinasofti.crm.shiro.UserRealm">
+        <property name="userBiz" ref="userBiz"/>
+        <property name="credentialsMatcher" ref="credentialsMatcher"/>
+    </bean>
+
+    <bean id="credentialsMatcher" class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+        <property name="hashAlgorithmName" value="md5"/>
+        <property name="hashIterations" value="1"/>
+    </bean>
+
+    <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+        <property name="cacheManagerConfigFile" value="classpath:shiro-ehcache.xml"/>
+    </bean>
+
+    <bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
+        <property name="cookie" ref="rememberMeCookie"/>
+    </bean>
+    <bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+        <constructor-arg value="rememberMe"/>
+        <property name="maxAge" value="2592000"/>
+    </bean>
+
+
+
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager"/>
+        <!--登录页面  -->
+        <property name="loginUrl" value="/privilegeManage/login.action"></property>
+        <!-- 登录成功后 -->
+        <property name="successUrl" value="/privilegeManage/first.action"></property>
+
+        <property name="unauthorizedUrl" value="/refuse.jsp"></property>
+        <property name="filterChainDefinitions">
+            <!-- /**代表下面的多级目录也过滤 -->
+            <value>
+                /images/** = anon
+                /plugins/layui/** = anon
+                /datas/** = anon
+                /js/** = anon
+                /css/** = anon
+                /plugins/layui/css/** = anon
+
+                <!--/first.action = anon-->
+                /test.jsp = anon
+
+                <!--/test3.jsp = perms[item:delete]-->
+                /images/** = anon
+                /js/** = anon
+                /css/** = anon
+                /plugins/layui/css/** = anon
+                /assets/img/** = anon
+                /newsPage/css/** = anon
+                /newsPage/fonts/** = anon
+                /newsPage/js/** = anon
+                /indexTime/images/** = anon
+                /indexTime/js/** = anon
+                /indexTime/** = anon
+
+                /newsPage/indexs.jsp = anon
+                /privilegeManage/gonews.action = anon
+                /news/lunbolist.action = anon
+                /newsPage/lunbo.jsp = anon
+                /news/newsfindNews.action = anon
+                /newsPage/newsM.jsp = anon
+                /news/newsfindById2.action = anon
+                /newsPage/newsson1.jsp = anon
+
+                <!--/login.jsp = anon-->
+                <!--/main.jsp = user-->
+                <!--/index.jsp = user-->
+
+                <!--/privilegeManage/first.action = user-->
+                <!--/customer/custManage.jsp = perms[cust-info:create]-->
+                <!--资源权限管理-->
+                <!--高管查看报表-->
+                <!--客户贡献-->
+                /statisticalForm/CustomerContribution.jsp = perms[report:select]
+                <!--客户构成-->
+                /statisticalForm/CustomerConstitute.jsp = perms[report:select]
+                <!--客户流失-->
+                /statisticalForm/CustomerOut.jsp = perms[report:select]
+                <!--客户服务分析-->
+                /statisticalForm/CustomerService.jsp = perms[report:select]
+                <!--客户经理权限-->
+                /customer/historicalOrder.jsp = perms[order:select]
+                <!--客户流失管理-->
+                /customer/custChurn.jsp = perms[cust-loss]
+                <!--客户信息管理-->
+                /customer/custManage.jsp = perms[cust-info]
+                <!--新建销售机会-->
+                /salesManagement/NewSaleOpportunity.jsp = perms[sale:create]
+                <!--销售机会管理-->
+                /salesManagement/ManageSaleOpportunity.jsp = perms[sale]
+                <!--客户开发计划-->
+                /salesManagement/CustDist.jsp = perms[cust-dlop]
+                <!--编辑销售机会-->
+                /salesManagement/CompileSaleOpportunity.jsp = perms[sale:update]
+                <!--删除销售机会-->
+                /sales/salesdelete.action = perms[sale:delete]
+
+                <!--指派销售机会未填写，jsp方式实现-->
+
+                <!--制定销售计划-->
+                /salesManagement/DrawPlan.jsp = perms[cust-dlop:create]
+                <!--执行销售计划-->
+                /salesManagement/DoPlan.jsp = perms[cust-dlop:update]
+                /customer/custSave.jsp = perms[cust-info:create]
+                <!--创建服务-->
+                /serviceManagement/newService.jsp = perms[service-info:create]
+                <!--处理服务-->
+                /serviceManagement/serviceProcessing.jsp = perms[service-info:update]
+                <!--查看归档-->
+                /serviceManagement/serviceFiling.jsp = perms[service-info:select]
+                <!--服务反馈-->
+                /serviceManagement/serviceFeedback.jsp = perms[service-info:edit]
+                <!--查询产品-->
+                /basicData/SelectProduct.jsp = perms[item:select]
+                <!--查询库存-->
+                /basicData/SelectInventory.jsp = perms[inventory:select]
+                <!--报价创建-->
+                /quotationManagement/newQuotationStep1.jsp = perms[quot-info:create]
+                <!--报价处理-->
+                /quotationManagement/quotationShow.jsp = perms[quot-info:edit]
+                <!--销售主管权限-->
+                <!--/salesManagement/NewSaleOpportunity.jsp = perms[sale:create]-->
+                <!--服务分配-->
+                /serviceManagement/serviceAllocation.jsp = perms[service-info:delete]
+                <!--报价审核-->
+                /quotationManagement/quotationAudit.jsp = perms[quot-info:update]
+                <!--报价归档-->
+                /quotationManagement/quotationFilling.jsp = perms[quot-info:select]
+                <!--数据字典管理-->
+                /basicData/ManageDatas.jsp = perms[datadic]
+                <!--权限管理之用户管理-->
+                /privilegeManagement/ManageUser.jsp = perms[user]
+                <!--权限管理之角色管理-->
+                /privilegeManagement/ManageRole.jsp = perms[role]
+                <!--权限管理之权限分配-->
+                /privilegeManagement/RoleCode.jsp = perms[power]
+                <!--轮播管理-->
+                /newsManagement/carouselManagement.jsp = perms[carousel]
+                <!--新闻管理-->
+                /newsManagement/newManagement.jsp = perms[news]
+                <!--系统管理之自定义设置-->
+                /logofindWeb.action = perms[system]
+                <!--数据库管理-->
+                /systemManagement/DatabaseManagement.jsp = perms[system]
+                <!--数据库连接设置-->
+                /systemManagement/DatabaseConnectionSettings.jsp = perms[system]
+                <!--日志记录-->
+                /systemManagement/Logging.jsp = perms[system]
+
+
+
+
+
+
+                /logout.action = logout
+                /** = authc
+                <!--/** = anon-->
+            </value>
+        </property>
+    </bean>
+</beans>

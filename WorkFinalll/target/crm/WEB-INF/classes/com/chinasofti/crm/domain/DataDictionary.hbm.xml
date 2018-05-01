@@ -1,0 +1,16 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.chinasofti.crm.domain">
+    <class name="DataDictionary">
+        <id name="number">
+            <generator class="identity" />
+        </id>
+        <property name="type"/>
+        <property name="entry"/>
+        <property name="value" />
+        <property name="yon" />
+
+    </class>
+</hibernate-mapping>

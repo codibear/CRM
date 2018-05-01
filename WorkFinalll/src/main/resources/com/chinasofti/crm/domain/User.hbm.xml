@@ -1,0 +1,27 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.chinasofti.crm.domain">
+    <class name="User">
+        <id name="userId">
+            <generator class="identity" />
+        </id>
+        <property name="userNo" />
+        <property name="userPwd"/>
+        <property name="userName" />
+        <property name="userSex"/>
+        <property name="userPhone"/>
+        <property name="userEmail"/>
+        <property name="birthday" />
+        <property name="userDate" />
+        <property name="salt"/>
+        <set name="roles" table="roleanduser">
+            <key column="userId"></key>
+            <many-to-many column="roleId" class="com.chinasofti.crm.domain.Role">
+
+            </many-to-many>
+        </set>
+    </class>
+
+</hibernate-mapping>

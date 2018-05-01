@@ -1,0 +1,40 @@
+html,body{
+    margin: 0 auto;
+
+}
+.admin-main{
+    width: 100%;
+    height: auto;
+}
+#main{
+    width: 85%;
+    height: 100%;
+    margin: 0 auto;
+}
+.title1{
+    height: 30px;
+    font-weight: 500;
+    font-size: 30px;
+    color: #1AA094;
+}
+.layui-btn-group{
+    float: right;
+}
+
+input{
+    width: 400px;
+    height: 40px;
+}
+#table1{
+    margin-top: 41px;
+}
+tr{
+    background: #F8F8F8;
+}
+.td1{
+    height: 50px;
+}
+#span1,#span2,#span3,#span4{
+    margin-left: 2%;
+    color: red;
+}

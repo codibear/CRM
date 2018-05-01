@@ -1,0 +1,339 @@
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+
+        <!--将对象工厂交给spring进行管理-->
+        <constant name="struts.objectFactory" value="spring"/>
+        <constant name="struts.i18n.encoding" value="utf-8"/>
+
+                     <!--这是一个美丽的示例-->
+
+
+    <!--这是销售机会-->
+    <package name="sales" namespace="/sales" extends="struts-default">
+        <global-allowed-methods>regex:.*</global-allowed-methods>
+        <action name="sales*" class="com.chinasofti.crm.action.salesOpp.SalesAction" method="{1}">
+            <result name="list">/salesManagement/ManageSaleOpportunity.jsp</result>
+            <result name="findOne">/salesManagement/CompileSaleOpportunity.jsp</result>
+            <result name="give">/salesManagement/AssignSaleOpportunity.jsp</result>
+            <result name="success">/salesManagement/ManageSaleOpportunity.jsp</result>
+            <result name="del">salesManagement/ManageSaleOpportunity.jsp</result>
+        </action>
+    </package>
+
+    <!--这是客户计划-->
+    <package name="plan" namespace="/plan" extends="struts-default">
+        <global-allowed-methods>regex:.*</global-allowed-methods>
+        <action name="plan*" class="planAction" method="{1}">
+            <result name="drawPlan">/salesManagement/DrawPlan.jsp</result>
+            <result name="doPlan">/salesManagement/DoPlan.jsp</result>
+            <result name="ok"></result>
+            <result name="zero">/salesManagement/CustDist.jsp</result>
+        </action>
+    </package>
+
+
+
+
+    <!--这是客户管理-->
+    <package name="customer" namespace="/customer" extends="struts-default">
+        <global-allowed-methods>regex:.*</global-allowed-methods>
+        <action name="customer*" class="customerAction" method="{1}">
+
+            <result name="success1">custManage.jsp</result>
+            <result name="modify">custInformation.jsp</result>
+            <result name="success" type="stream">
+                <param name="contentType">application/octet-stream</param>
+                <param name="inputName">inputStream</param>
+                <param name="contentDisposition">attachment;filename="${fileName}"</param>
+                <param name="bufferSize">4096</param>
+            </result>
+
+        </action>
+        <action name="cstCon*" class="cstConAction" method="{1}">
+            <result name="list">recordAssociation.jsp</result>
+            <result name="news">newRecordCommunication.jsp</result>
+            <result name="save" type="redirect">cstConlist.action?id=${id}</result>
+            <result name="look">editRecordCommunication.jsp</result>
+            <result name="modify" type="redirect">cstConlist.action?id=${id}</result>
+            <result name="success" type="stream">
+                <param name="contentType">application/octet-stream</param>
+                <param name="inputName">inputStream</param>
+                <param name="contentDisposition">attachment;filename="${fileName}"</param>
+                <param name="bufferSize">4096</param>
+            </result>
+        </action>
+        <action name="cstLinkman*" class="cstLinkmanAction" method="{1}">
+            <result name="list">linkman.jsp</result>
+            <result name="create">newContacts.jsp</result>
+            <result name="load2">linkman.jsp</result>
+            <result name="edit">editContacts.jsp</result>
+            <result name="back" type="redirect">cstLinkmanload2.action?id=${id}</result>
+            <result name="modifylink" type="redirect">cstLinkmanload2.action?id=${id}</result>
+            <result name="delete_link" type="redirect">cstLinkmanload2.action?id=${id}</result>
+            <result name="success" type="stream">
+                <param name="contentType">application/octet-stream</param>
+                <param name="inputName">inputStream</param>
+                <param name="contentDisposition">attachment;filename="${fileName}"</param>
+                <param name="bufferSize">4096</param>
+            </result>
+
+        </action>
+        <action name="cstLost*" class="cstLostAction" method="{1}">
+            <result name="find">/customer/mitigate.jsp</result>
+            <result name="loss">/customer/comfirmLoss.jsp</result>
+            <result name="delay">/customer/mitigate.jsp</result>
+            <result name="confirm" >/customer/custChurn.jsp</result>
+            <result name="conf">/customer/comfirmDetail.jsp</result>
+            <result name="success" type="stream">
+                <param name="contentType">application/octet-stream</param>
+                <param name="inputName">inputStream</param>
+                <param name="contentDisposition">attachment;filename="${fileName}"</param>
+                <param name="bufferSize">4096</param>
+            </result>
+
+        </action>
+        <action name="goods*" class="goodsAction" method="{1}">
+            <result></result>
+        </action>
+        <action name="goodsAndOrder*" class="goodsAndOrderAction" method="{1}">
+            <result></result>
+        </action>
+        <action name="orders*" class="ordersAction" method="{1}">
+            <result name="list">/customer/historicalOrder.jsp</result>
+            <result name="ordercreate">/customer/neworder.jsp</result>
+            <result name="orderback" type="redirect">orderslist.action?id=${id}</result>
+            <result name="details" >/customer/orderDetails.jsp</result>
+            <result name="success" type="stream">
+                <param name="contentType">application/octet-stream</param>
+                <param name="inputName">inputStream</param>
+                <param name="contentDisposition">attachment;filename="${fileName}"</param>
+                <param name="bufferSize">4096</param>
+            </result>
+            <!--<result name="orderback" >/customer/neworder.jsp</result>-->
+        </action>
+    </package>
+
+    <!-- 服务模块 -->
+    <package name="service" namespace="/service" extends="struts-default">
+        <global-allowed-methods>regex:.*</global-allowed-methods>
+        <action name="service*" class="serviceAction" method="{1}">
+
+            <result name="EditService">/serviceManagement/serviceP.jsp</result>
+            <result name="EditService2">/serviceManagement/FeedbackP.jsp</result>
+            <result name="EditService3">/serviceManagement/filingP.jsp</result>
+
+            <result name="serviceAllo">/serviceManagement/serviceAllocation.jsp</result>
+            <result name="AlloService">/serviceManagement/serviceAllocationDetails.jsp</result>
+        </action>
+        <action name="down*" class="com.chinasofti.crm.action.service.Load" method="{1}">
+            <result name="success" type="stream">
+                <param name="contentType">application/octet-stream</param>
+                <param name="inputName">inputStream</param>
+                <param name="contentDisposition">attachment;filename="${fileName}"</param>
+                <param name="bufferSize">4096</param>
+            </result>
+        </action>
+    </package>
+
+    <!-- 导出excel -->
+    <package name="quotaDownload" namespace="/" extends="struts-default">
+
+        <global-allowed-methods>regex:.*</global-allowed-methods>
+
+        <action name="quotaDownload" class="quotaDownload">
+
+            <result name="success" type="stream">
+                <param name="contentType">application/octet-stream</param>
+                <param name="inputName">inputStream</param>
+                <param name="contentDisposition">attachment;filename="${fileName}"</param>
+                <param name="bufferSize">4096</param>
+            </result>
+        </action>
+    </package>
+
+
+
+    <!--统计报表-->
+    <package name="sta" namespace="/statisticalForm" extends="struts-default">
+        <global-allowed-methods>regex:.*</global-allowed-methods>
+        <action name="sta*" class="staReportAction" method="{1}">
+            <result></result>
+        </action>
+    </package>
+
+    <!--权限管理-->
+    <package name="privilegeManage" extends="struts-default" namespace="/privilegeManage">
+        <global-allowed-methods>regex:.*</global-allowed-methods>
+        <!--权限管理之分配权限-->
+        <action name="power*" class="com.chinasofti.crm.action.privilegeManage.PowerAction" method="{1}">
+            <result></result>
+        </action>
+
+        <!--权限管理之角色管理-->
+        <action name="role*" class="com.chinasofti.crm.action.privilegeManage.RoleAction" method="{1}">
+            <result></result>
+        </action>
+
+        <!--权限管理之用户管理-->
+        <action name="user*" class="com.chinasofti.crm.action.privilegeManage.UserAction" method="{1}">
+            <result></result>
+        </action>
+
+        <!--shiro管理之登录-->
+        <action name="login" class="userAction" method="login">
+            <result name="login">/login.jsp</result>
+        </action>
+        <action name="first" class="userAction" method="first">
+            <result name="first" type="redirect">/index.jsp</result>
+        </action>
+        <action name="clearShiroCache" class="userAction" method="clearShiroCache">
+            <result name="success">/test.jsp</result>
+        </action>
+        <action name="gonews" class="userAction" method="gonews">
+            <result name="news" type="redirect">/newsPage/indexs.jsp</result>
+        </action>
+    </package>
+
+    <!--系统管理-->
+    <package name="system" namespace="/systemManagement" extends="struts-default">
+        <global-allowed-methods>regex:.*</global-allowed-methods>
+        <action name="system*" class="mySqlAction" method="{1}">
+            <result></result>
+        </action>
+        <action name="sys*" class="com.chinasofti.crm.action.sysManage.LoggingAction" method="{1}">
+            <result></result>
+        </action>
+    </package>
+<!--导出日志excel-->
+    <package name="DownloadExcel" namespace="/" extends="struts-default">
+
+        <global-allowed-methods>regex:.*</global-allowed-methods>
+
+        <action name="downloadExcel" class="downexcle">
+
+            <result name="success" type="stream">
+                <param name="contentType">application/octet-stream</param>
+                <param name="inputName">inputStream</param>
+                <param name="contentDisposition">attachment;filename="${fileName}"</param>
+                <param name="bufferSize">4096</param>
+            </result>
+        </action>
+    </package>
+
+    <!--zero导出excel表-->
+    <package name="Struts2FileDownload" namespace="/" extends="struts-default">
+
+    <global-allowed-methods>regex:.*</global-allowed-methods>
+
+    <action name="downloadFile" class="downTest">
+
+        <result name="success" type="stream">
+            <param name="contentType">application/octet-stream</param>
+            <param name="inputName">inputStream</param>
+            <param name="contentDisposition">attachment;filename="${fileName}"</param>
+            <param name="bufferSize">4096</param>
+        </result>
+    </action>
+</package>
+
+    <!--基础数据-->
+    <package name="basicData" namespace="/basicData" extends="struts-default">
+        <global-allowed-methods>regex:.*</global-allowed-methods>
+        <!--库存管理-->
+        <action name="stock*" class="com.chinasofti.crm.action.basicData.StockAction" method="{1}">
+            <result></result>
+        </action>
+        <!--数据字典-->
+        <action name="DataDictionarydelete" class="com.chinasofti.crm.action.basicData.DataDictionaryAction" method="delete">
+            <result name="success">ManageDatas.jsp</result>
+        </action>
+        <action name="DataDictionary*" class="com.chinasofti.crm.action.basicData.DataDictionaryAction" method="{1}">
+            <result name="success">CompileNewDatas.jsp</result>
+        </action>
+    </package>
+
+    <!--新闻-->
+    <package name="news" namespace="/news" extends="struts-default">
+        <global-allowed-methods>regex:.*</global-allowed-methods>
+        <action name="news*" class="com.chinasofti.crm.action.news.NewsAction" method="{1}">
+            <result></result>
+            <!--<allowed-methods>saveNews</allowed-methods>-->
+            <result name="success">/newsManagement/selectNews.jsp</result>
+            <result name="success1">/newsManagement/editNews.jsp</result>
+            <result name="delete">/newsManagement/newManagement.jsp</result>
+            <result name="update">/newsManagement/newManagement.jsp</result>
+
+            <result name="success2">/newsPage/newsson1.jsp</result>
+        </action>
+        <!--轮播-->
+        <action name="lunbo*" class="lunboAction" method="{1}">
+            <result></result>
+            <result name="ok">/newsManagement/updateCarouse.jsp</result>
+            <result name="success"></result>
+            <result name="file">/newsManagement/carouselManagement.jsp</result>
+        </action>
+    </package>
+    <!--报价系统-->
+    <package name="quotation" extends="struts-default" namespace="/quotation">
+        <global-allowed-methods>regex:.*</global-allowed-methods>
+        <action name="page*" class="com.chinasofti.crm.action.quotation.QuotationAction" method="{1}">
+            <result name="success">/quotationManagement/newQuotationStep2.jsp</result>
+            <result name="quo">/quotationManagement/quotationFillingP.jsp</result>
+        </action>
+        <!--报价审核-->
+    </package>
+    <package name="quotationSel" extends="struts-default" namespace="/quotationSel">
+        <global-allowed-methods>regex:.*</global-allowed-methods>
+        <action name="page*" class="com.chinasofti.crm.action.quotation.QuotationSelAction" method="{1}">
+        </action>
+    </package>
+    <!--报价处理-->
+    <package name="quotationPro" extends="struts-default" namespace="/quotationPro">
+        <global-allowed-methods>regex:.*</global-allowed-methods>
+        <action name="pro*" class="com.chinasofti.crm.action.quotation.QuotationProAction" method="{1}">
+            <result name="success">/quotationManagement/quotationAuditP.jsp</result>
+        </action>
+
+    </package>
+    <!--报价详细处理-->
+    <package name="quotationProcess" extends="struts-default" namespace="/quotationProcess">
+        <global-allowed-methods>regex:.*</global-allowed-methods>
+        <action name="page*" class="com.chinasofti.crm.action.quotation.QuotationProcessAction" method="{1}">
+            <result name="success">/quotationManagement/quotationS.jsp</result>
+
+
+        </action>
+
+
+    </package>
+    <!--报价归档分页-->
+    <package name="quotationPage" extends="struts-default" namespace="/quotationPage">
+        <global-allowed-methods>regex:.*</global-allowed-methods>
+        <action name="quotationPage*" class="com.chinasofti.crm.action.quotation.QuotationPageAction" method="{1}">
+            <!--<result name="success">/quotationManagement/quotationAuditP.jsp</result>-->
+        </action>
+    </package>
+
+
+    <!-- 服务模块 -->
+    <package name="service" namespace="/service" extends="struts-default">
+        <global-allowed-methods>regex:.*</global-allowed-methods>
+        <action name="service*" class="serviceAction" method="{1}">
+            <result name="EditService">/serviceManagement/serviceP.jsp</result>
+            <result name="serviceAllo">/serviceManagement/serviceAllocation.jsp</result>
+            <result>/index.jsp</result>
+        </action>
+    </package>
+    <!--title And logo-->
+    <!-- title And logo -->
+    <package name="titleAndLogo" namespace="/" extends="struts-default">
+        <global-allowed-methods>regex:.*</global-allowed-methods>
+        <action name="logo*" class="com.chinasofti.crm.action.statisticalReport.TitleAndLogoAction" method="{1}">
+            <result>/index.jsp</result>
+            <result name="success">/systemManagement/CustomSettings.jsp</result>
+        </action>
+    </package>
+</struts>

@@ -1,0 +1,23 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.chinasofti.crm.domain">
+    <class name="Orders" table="orders">
+        <id name="orderId" >
+            <generator class="identity" />
+        </id>
+        <property name="orderCusNo" />
+        <property name="orderCusName" />
+        <property name="orderTime" />
+        <property name="orderAddr" />
+        <property name="orderMoney" />
+        <property name="orderStatic"/>
+        <set name="goodses"  table="goods_order">
+            <key column="orderId"></key>
+            <many-to-many column="goodsNo" class="Goods"/>
+        </set>
+        <many-to-one name="customer" class="Customer" column="custId"  fetch="join"/>
+    </class>
+
+</hibernate-mapping>

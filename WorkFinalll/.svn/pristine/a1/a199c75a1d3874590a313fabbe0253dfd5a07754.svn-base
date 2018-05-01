@@ -1,0 +1,157 @@
+package com.chinasofti.crm.utils;
+
+import com.chinasofti.crm.biz.SalesBiz;
+import com.chinasofti.crm.domain.Log;
+import com.chinasofti.crm.domain.Plan;
+import com.chinasofti.crm.domain.SalesManage;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import javax.annotation.Resource;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.List;
+
+/**
+ * Created by codiibear on 2017/8/10.
+ * zero组报表用
+ */
+public class ExcelUtil {
+    /**
+     * @param path      保存路径
+     * @param name      文件名称
+     * @param sheetName 表明
+     * @param lists     查询得到的list数据
+     * @param objects   用来拓展
+     */
+    @Resource
+    private static SalesBiz salesBiz;
+    public static void getExcel(String path, String name, String sheetName, List lists, Object... objects) {
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        //用于时间的转换
+        CreationHelper creationHelper = workbook.getCreationHelper();
+        XSSFSheet sheet = workbook.createSheet(sheetName);
+        CellStyle cellStyle = workbook.createCellStyle();
+        cellStyle.setDataFormat(
+                creationHelper.createDataFormat().getFormat("yyyy-MM-dd hh:mm:ss")
+        );
+        int rowNum = 0;
+        //表头内容的初始化
+        int colTitle = 0;
+        if (lists.get(0) instanceof Plan) {
+            List<Plan> plans = lists;
+
+            Row rowtitle = sheet.createRow(rowNum++);
+            rowtitle.createCell(colTitle++).setCellValue("计划项编号");
+            //rowtitle.createCell(colTitle++).setCellValue("客户名称");
+            rowtitle.createCell(colTitle++).setCellValue("计划项");
+            rowtitle.createCell(colTitle++).setCellValue("计划时间");
+            rowtitle.createCell(colTitle++).setCellValue("执行效果");
+
+            for (Plan p : plans) {
+                //分配每一行
+                Row row = sheet.createRow(rowNum++);
+                //分配每一列
+                int colNum = 0;
+
+                //为单元格赋值
+                row.createCell(colNum++).setCellValue(p.getPlanId());
+                //row.createCell(colNum++).setCellValue(p.getSalesmanage().getCusName());
+                row.createCell(colNum++).setCellValue(p.getPlanPro());
+                Cell cell = row.createCell(colNum++);
+                cell.setCellValue(p.getPlanTime());
+                cell.setCellStyle(cellStyle);
+                row.createCell(colNum++).setCellValue(p.getPlanResult());
+            }
+        }
+
+        if (lists.get(0) instanceof SalesManage) {
+            List<SalesManage> salesManages = lists;
+            Row rowtitle = sheet.createRow(rowNum++);
+            rowtitle.createCell(colTitle++).setCellValue("销售编号");
+            rowtitle.createCell(colTitle++).setCellValue("客户名称");
+            rowtitle.createCell(colTitle++).setCellValue("机会来源");
+            rowtitle.createCell(colTitle++).setCellValue("成功几率");
+            rowtitle.createCell(colTitle++).setCellValue("机会描述");
+            rowtitle.createCell(colTitle++).setCellValue("概要");
+            rowtitle.createCell(colTitle++).setCellValue("创建人");
+            rowtitle.createCell(colTitle++).setCellValue("创建时间");
+            rowtitle.createCell(colTitle++).setCellValue("指派人");
+            rowtitle.createCell(colTitle++).setCellValue("指派时间");
+            rowtitle.createCell(colTitle++).setCellValue("联系人");
+            rowtitle.createCell(colTitle++).setCellValue("联系方式");
+
+            for (SalesManage s : salesManages) {
+                //分配每一行
+                Row row = sheet.createRow(rowNum++);
+                //分配每一列
+                int colNum = 0;
+                /*cellStyle.setDataFormat(
+                        creationHelper.createDataFormat().getFormat("yyyy-MM-dd hh:mm:ss")
+                );*/
+                //为单元格赋值
+                row.createCell(colNum++).setCellValue(s.getSalesId());
+                row.createCell(colNum++).setCellValue(s.getCusName());
+                row.createCell(colNum++).setCellValue(s.getOppSource());
+                row.createCell(colNum++).setCellValue(s.getSuccRate());
+                row.createCell(colNum++).setCellValue(s.getOppDesc());
+                row.createCell(colNum++).setCellValue(s.getOutLine());
+                row.createCell(colNum++).setCellValue(s.getCreatMan());
+                Cell cell = row.createCell(colNum++);
+                cell.setCellValue(s.getCreatTime());
+                cell.setCellStyle(cellStyle);
+                row.createCell(colNum++).setCellValue(s.getGiveMan());
+                Cell cell1 = row.createCell(colNum++);
+                cell1.setCellValue(s.getGiveTime());
+                cell1.setCellStyle(cellStyle);
+                row.createCell(colNum++).setCellValue(s.getLinkName());
+                row.createCell(colNum++).setCellValue(s.getLinkPhone());
+            }
+        }
+
+        if (lists.get(0) instanceof Log) {
+            List<Log> logs = lists;
+            Row rowtitle = sheet.createRow(rowNum++);
+            rowtitle.createCell(colTitle++).setCellValue("用户编号");
+            rowtitle.createCell(colTitle++).setCellValue("用户姓名");
+            rowtitle.createCell(colTitle++).setCellValue("操作时间");
+            rowtitle.createCell(colTitle++).setCellValue("访问的方法");
+            rowtitle.createCell(colTitle++).setCellValue("IP地址");
+            rowtitle.createCell(colTitle++).setCellValue("备注");
+            for (Log log : logs) {
+                //分配每一行
+                Row row = sheet.createRow(rowNum++);
+                //分配每一列
+                int colNum = 0;
+                /*cellStyle.setDataFormat(
+                        creationHelper.createDataFormat().getFormat("yyyy-MM-dd hh:mm:ss")
+                );*/
+                //为单元格赋值
+                row.createCell(colNum++).setCellValue(log.getUserId());
+                row.createCell(colNum++).setCellValue(log.getUserName());
+//                row.createCell(colNum++).setCellValue(log.getCreatetime());
+                Cell cell2 = row.createCell(colNum++);
+                cell2.setCellValue(log.getCreatetime());
+                cell2.setCellStyle(cellStyle);
+                row.createCell(colNum++).setCellValue(log.getMeothod());
+                row.createCell(colNum++).setCellValue(log.getIP());
+                row.createCell(colNum++).setCellValue(log.getMsg());
+            }
+        }
+
+        try {
+            FileOutputStream outputStream = new FileOutputStream(path +"/"+ name + ".xlsx");
+            workbook.write(outputStream);
+            workbook.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}

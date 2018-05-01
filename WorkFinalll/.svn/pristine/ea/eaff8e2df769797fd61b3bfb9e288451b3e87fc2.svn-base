@@ -1,0 +1,53 @@
+package test.chinasofti.crm.domain;
+
+import com.chinasofti.crm.biz.PowerBiz;
+import com.chinasofti.crm.biz.RoleBiz;
+import com.chinasofti.crm.biz.UserBiz;
+import com.chinasofti.crm.domain.Power;
+import com.chinasofti.crm.domain.Role;
+import com.chinasofti.crm.domain.User;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import javax.annotation.Resource;
+
+/**
+ * Created by Administrator on 2017/8/10.
+ */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("classpath:applicationContext.xml")
+public class Testprivilege {
+    @Resource
+     private RoleBiz roleBiz;
+    @Resource
+    private UserBiz userBiz;
+    @Resource
+    private PowerBiz powerBiz;
+
+    @Test
+    public void saveRole(){
+        Role role = new Role();
+        role.setRoleId(2);
+        role.setRoleName("姜哲");
+        this.roleBiz.save(role);
+    }
+
+    @Test
+    public void saveUser(){
+        User user = new User();
+        user.setUserId(1);
+        user.setUserName("姜哲");
+        user.setUserPwd("11111");
+        this.userBiz.save(user);
+    }
+
+    @Test
+    public void savePower(){
+        Power power = new Power();
+        power.setPowerId(199);
+        power.setPowerName("刘燕是个大笨蛋");
+        this.powerBiz.save(power);
+    }
+}

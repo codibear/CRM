@@ -1,0 +1,103 @@
+/*整体*/
+#admin-main{
+    width: 100%;
+    height: auto;
+    /*background: url("../images/bg.jpg") no-repeat;*/
+    background: #F6F6F6;
+}
+/*包含整体*/
+#main {
+    width: 90%;
+    height: auto;
+    margin: 0 auto;
+
+}
+
+
+/*头部---------------*/
+#header{
+    background-color: #9cc2cb;
+    text-align: center;
+    width: 100%;
+    height: 90px;
+}
+/*左侧导航格式设置*/
+#hdiv1 li{
+    list-style: none;
+    height: 90px;
+    line-height: 90px;
+    font-size: 20px;
+}
+/*连接格式设置*/
+#hdiv1 li :link{
+    color:gainsboro;
+    text-decoration: none;
+}
+/*最上边字体设置*/
+#hdiv1 li :hover{
+    color: #23AC38;
+}
+#hul1 li{
+    float: left;
+    width: 100px;
+    /*background-color: */
+    padding-left:30px;
+}
+/*右侧导航设置*/
+#hul2 li{
+    float: right;
+    width: 100px;
+    list-style: none;
+    margin-top: 10px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 14px;
+}
+/*内容部分-------------------------------------*/
+/*内容布局----*/
+#cont{
+    width: 90%;
+    margin-top: 20px;
+    background-color: white;
+    margin:0 auto;
+    padding: 0 5%;
+}
+/*标题格式----*/
+#title{
+    width: 100%;
+    font-size: 35px;
+    text-align: center;
+    /*align-content: center;*/
+    margin: 10px auto;
+}
+
+/*p{*/
+    /*font-size: 22px;*/
+/*}*/
+
+/*底部------------------------------------------*/
+#footer{
+    width: 100%;
+    height: 100px;
+    text-align: center;
+    line-height: 30px;
+    margin-top: 10px;
+    padding-top: 20px;
+    border-top:solid 1px #E1E1E1;
+    background-color: #9cc2cb;
+}
+
+#footer a{
+    color: #666;
+    text-decoration: none;
+    font-family: "SimSun";
+    font-size: 14px;
+}
+#footer a:hover{
+    color: #F00;
+}
+#footer p{
+    color: #666;
+    font-family: "SimSun";
+    font-size: 14px;
+}

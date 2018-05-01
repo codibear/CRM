@@ -1,0 +1,25 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.chinasofti.crm.domain">
+    <class name="Goods">
+        <id name="goodsNo">
+            <generator class="identity"/>
+        </id>
+        <property name="goodsId" length="20"/>
+        <property name="goodsName" />
+        <property name="goodsModel" />
+        <property name="goodsLevel" />
+        <property name="goodsNum" />
+        <property name="goodsCom" />
+        <property name="goodsPrice" />
+        <property name="goodsMeno" />
+        <set name="orderses" table="goods_order">
+            <key column="goodsNo"></key>
+            <many-to-many column="orderId" class="Orders" fetch="join"/>
+        </set>
+    </class>
+
+
+</hibernate-mapping>

@@ -1,0 +1,178 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: Administrator
+  Date: 2017/8/8
+  Time: 18:47
+  To change this template use File | Settings | File Templates.
+--%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
+<html>
+<head>
+    <title>增加用户</title>
+    <link rel="stylesheet" href="../plugins/layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="../css/main.css" />
+    <link rel="stylesheet" href="css/ManageUser.css">
+    <script type="text/javascript" src="../js/jquery-1.8.3.min.js"></script>
+    <script src="../plugins/layui/layui.js"></script>
+    <script>
+        $(function(){
+            //发送ajax请求，获取所有的角色数据，返回json，在页面中动态构造到checkbox中
+            var url = "${pageContext.request.contextPath}/privilegeManage/rolelist.action";
+            $.get(url,function(data){
+                //解析json数据，构造checkbox
+                var div = $("#roleTD");
+                var input1;
+                $(data).each(function (i, obj) {
+                    var id = obj.roleId;
+                    var name = obj.roleName;
+                    input1 = "<input type='checkbox' name='roleIds' title="+name+" id="+id+" value="+id+">";
+                    $(div).append(input1);
+                    render();
+                });
+            });
+        });
+        function render() {
+            layui.use('form', function () {
+                var form = layui.form();
+                form.render(); //更新全部
+            })
+        }
+            layui.use(['form', 'layedit', 'laydate','layer'], function() {
+            var layer = layui.layer;
+            var $ = layui.jquery;
+            $("#submitBtn").click(function () {
+                var lyinput1=$("#layui-input1").val();//用户编号
+                var lyinput11=$("#layui-input1").val().length;
+                var lyinput2=$("#layui-input2").val();//用户姓名
+                var lyinput3=$("#layui-input3").val().length;//密码
+                var lyinput4=$("#layui-input4").val();//手机号
+                var lyinput5=$("#layui-input5").val();//邮箱
+                var lyinput6=$("#date1").val().length;//生日
+                var lyinput7=$("#date2").val().length;//入职日期
+
+                var uno=/^[0-9]*$/;//用户编号
+                var uname=/^[\u4e00-\u9fa5]+$/;//用户姓名
+                var ph=/^1[3|4|5|7|8]\d{9}$/;//手机号
+                var email=/^[a-z0-9._%-]+@([a-z0-9-]+\.)+[a-z]{2,4}$|^1[3|4|5|7|8]\d{9}$/;//邮箱
+
+                if(uno.test(lyinput1)&&lyinput11!=0&&uname.test(lyinput2)&&lyinput3!=0&&ph.test(lyinput4)&&email.test(lyinput5)&&lyinput6!=0&&lyinput7!=0){
+                    var index = layer.msg('增加中，请稍候', {icon: 16, time: false, shade: 0.8});
+                    setTimeout(function () {
+                        $.get("${pageContext.request.contextPath}/privilegeManage/useradd.action",$("form").serialize(),function(data){
+                            if(data.info == "1") {
+                                layer.msg('增加成功');
+                                window.parent.location.reload(); //刷新父页面
+                                var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+                                parent.layer.close(index);
+                            }else{
+                                layer.msg('增加失败');
+                            }
+                        });
+                        layer.close(index);
+                    },800) ;
+                }
+
+            });
+
+            var form = layui.form()
+                    , layer = layui.layer
+                    , layedit = layui.layedit
+                    , laydate = layui.laydate;
+            form.verify({
+                no1: [/^[0-9]*$/, '请输入数字'],
+                username:[/^[\u4e00-\u9fa5]+$/,'请输入汉字'],
+                phone: [/^1[3|4|5|7|8]\d{9}$/, '手机必须11位，只能是数字！'],
+                email: [/^[a-z0-9._%-]+@([a-z0-9-]+\.)+[a-z]{2,4}$|^1[3|4|5|7|8]\d{9}$/, '邮箱格式不对'],
+                no2: [/^[0-9]*$/, '请输入数字']
+
+            });
+
+            var yzui = $("#layui-input1");
+            yzui.blur(function () {
+                var yzuival=$("#layui-input1").val();
+                $.get("${pageContext.request.contextPath}/privilegeManage/userlist.action",function (data) {
+                    $(data).each(function (i,obj) {
+                        if(yzuival===obj.userNo){
+                            layer.msg("此用户已存在，请重新输入！",{time: 1000, shade: 0.8});
+//                        用户存在时清空输入框内容并且获得焦点；
+                            yzui.val("").focus();
+                        }
+                    })
+                })
+            });
+        });
+    </script>
+</head>
+<body>
+<div class="admin-main">
+    <div id="main">
+        <span class="title1">增加用户</span>
+        <form class="layui-form">
+            <div class="layui-form-item" style="margin-top: 20px">
+                <label class="layui-form-label" >员工编号</label>
+                <div class="layui-input-block">
+                    <input id="layui-input1" type="text" name="user.userNo" required  lay-verify="no1" placeholder="请输入员工编号" autocomplete="off" class="layui-input" style="width: 300px;">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">姓名</label>
+                <div class="layui-input-block">
+                    <input id="layui-input2" type="text" name="user.userName" required  lay-verify="username" placeholder="请输入姓名" autocomplete="off" class="layui-input" style="width: 300px;">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">密码</label>
+                <div class="layui-input-inline">
+                    <input type="password" id="layui-input3" name="user.userPwd" placeholder="请输入密码" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">性别</label>
+                <div class="layui-input-block">
+                    <input type="radio"  value="男" title="男" name="user.userSex" checked="">
+                    <input type="radio"  value="女" title="女" name="user.userSex" >
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">手机号</label>
+                <div class="layui-input-block">
+                    <input id="layui-input4" type="text" name="user.userPhone" required  lay-verify="phone" placeholder="请输入手机号" autocomplete="off" class="layui-input" style="width: 300px;">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">邮箱</label>
+                <div class="layui-input-block">
+                    <input id="layui-input5" type="text" name="user.userEmail" required  lay-verify="email" placeholder="请输入邮箱" autocomplete="off" class="layui-input" style="width: 300px;">
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label">生日</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="user.birthday" id="date1" lay-verify="date" placeholder="yyyy-mm-dd" autocomplete="off" class="layui-input" onclick="layui.laydate({elem: this, istime: true, format: 'YYYY-MM-DD'})">
+                </div>
+            </div>
+            <div class="layui-form-item" style="margin-top: 15px;">
+                <label class="layui-form-label">入职日期</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="user.userDate" id="date2" lay-verify="date" placeholder="yyyy-mm-dd" autocomplete="off" class="layui-input" onclick="layui.laydate({elem: this,istime: true, format: 'YYYY-MM-DD'})">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">选择角色</label>
+                <div class="layui-input-block" id="roleTD">
+                    <%--<input type="checkbox" name="like[write]" title="写作">--%>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button type="button" id="submitBtn" class="layui-btn" lay-submit lay-filter="formDemo">提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+</body>
+</html>

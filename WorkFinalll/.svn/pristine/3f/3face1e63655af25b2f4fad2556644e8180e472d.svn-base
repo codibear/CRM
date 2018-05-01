@@ -1,0 +1,5 @@
+#Wed Aug 16 12:02:57 CST 2017
+driverClassName=com.mysql.jdbc.Driver
+dbUsername=tianrui
+dbPassword=tianrui
+dbUrl=jdbc\:mysql\://192.168.110.254/crm

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--销售机会-->
+    <bean id="salesBiz" class="com.chinasofti.crm.biz.impl.SalesBizImpl">
+        <property name="salesDao" ref="salesDao"/>
+    </bean>
+
+    <!--商品-->
+    <bean id="goodsBiz" class="com.chinasofti.crm.biz.impl.GoodsBizImpl" >
+        <property name="goodsDao" ref="goodsDao" />
+    </bean>
+
+    <!--订单-->
+    <bean id="orderBiz" class="com.chinasofti.crm.biz.impl.OrderBizImpl" >
+        <property name="orderDao" ref="orderDao" />
+    </bean>
+
+    <!--交往记录-->
+    <bean id="cstConBiz" class="com.chinasofti.crm.biz.impl.CstConBizImpl" >
+        <property name="cstConDao" ref="cstConDao" />
+    </bean>
+
+    <!--商品订单关系-->
+    <bean id="goodsAndOrderBiz" class="com.chinasofti.crm.biz.impl.GoodsAndOrderBizImpl" >
+        <property name="goodsAndOrderDao" ref="goodsAndOrderDao" />
+    </bean>
+
+    <!--客户管理-->
+    <bean id="customerBiz" class="com.chinasofti.crm.biz.impl.CustomerBizImpl">
+        <property name="customerDao" ref="customerDao"/>
+
+    </bean>
+
+    <bean id="cstLinkmanBiz" class="com.chinasofti.crm.biz.impl.CstLinkmanBizImpl">
+        <property name="cstLinkmanDao" ref="cstLinkmanDao"/>
+    </bean>
+    <bean id="cstLostBiz" class="com.chinasofti.crm.biz.impl.CstLostBizImpl">
+        <property name="cstLostDao" ref="cstLostDao"/>
+    </bean>
+
+    <bean id="planBiz" class="com.chinasofti.crm.biz.impl.PlanBizImpl">
+        <property name="planDao" ref="planDao"/>
+    </bean>
+
+    <!--服务管理*************************-->
+    <bean id="serviceBiz" class="com.chinasofti.crm.biz.impl.ServiceBizImpl">
+        <property name="serviceDao" ref="serviceDao" />
+    </bean>
+
+    <!--News-->
+    <bean id="newsBiz" class="com.chinasofti.crm.biz.impl.NewsBizImpl">
+        <property name="newsDao" ref="newsDao" />
+    </bean>
+    <!--统计报表-->
+    <bean id="staReportBiz" class="com.chinasofti.crm.biz.impl.StaReportBizImpl">
+        <property name="staReportDao" ref="staReportDao" />
+    </bean>
+
+    <!--日志记录-->
+    <bean id="loggingBiz" class="com.chinasofti.crm.biz.impl.LoggingBizImpl">
+        <property name="loggingDao" ref="loggingDao"/>
+    </bean>
+
+    <!--权限管理-->
+    <!--权限管理之员工-->
+    <bean id="userBiz" class="com.chinasofti.crm.biz.impl.UserBizImpl">
+        <property name="userDao" ref="userDao"/>
+    </bean>
+    <!-- 权限管理之角色-->
+    <bean id="roleBiz" class="com.chinasofti.crm.biz.impl.RoleBizImpl">
+        <property name="roleDao" ref="roleDao"/>
+    </bean>
+
+    <!--权限管理之权限-->
+    <bean id="powerBiz" class="com.chinasofti.crm.biz.impl.PowerBizImpl">
+        <property name="powerDao" ref="powerDao"/>
+    </bean>
+
+    <!--权限管理之角色用户-->
+    <!--<bean id="roleAndUserBiz" class="com.chinasofti.crm.biz.impl.RoleAndUserBizImpl">-->
+        <!--<property name="roleAndUserDao" ref="roleAndUserDao"/>-->
+    <!--</bean>-->
+
+    <!--权限管理之权限角色-->
+    <!--<bean id="powerAndRoleBiz" class="com.chinasofti.crm.biz.impl.PowerAndRoleBizImpl">-->
+        <!--<property name="powerAndRoleDao" ref="powerAndRoleDao"/>-->
+    <!--</bean>-->
+
+
+
+    <!--库存管理-->
+    <bean id="stockBiz" class="com.chinasofti.crm.biz.impl.StockBizImpl">
+        <property name="stockDao" ref="stockDao" />
+    </bean>
+    <!--轮播管理-->
+    <bean id="lunboBiz" class="com.chinasofti.crm.biz.impl.LunboBizImpl">
+        <property name="lunboDao" ref="lunboDao" />
+    </bean>
+    <!--数据字典-->
+    <bean id="dataDictionaryBiz" class="com.chinasofti.crm.biz.impl.DataDictionaryBizImpl">
+        <property name="dataDictionaryDao" ref="dataDictionaryDao" />
+    </bean>
+
+    <!--报价管理-->
+    <bean id="quotationBiz" class="com.chinasofti.crm.biz.impl.QuotationBizImpl">
+        <property name="quotationDao" ref="quotationDao"/>
+    </bean>
+
+    <!--报价管理数据字典-->
+    <bean id="quotationStatusBiz" class="com.chinasofti.crm.biz.impl.QuotationStatusBizImpl">
+
+        <property name="quotationStatusDao" ref="quotationStatusDao"/>
+    </bean>
+
+<!--系统管理-->
+    <!--备份和还原数据库-->
+    <bean id="mySqlBiz" class="com.chinasofti.crm.biz.impl.MySqlBizImpl">
+        <property name="mySqlDao" ref="mySqlDao"/>
+    </bean>
+    <!--title ＆ logo-->
+    <bean id="titleAndLogoBiz" class="com.chinasofti.crm.biz.impl.TitleAndLogoBizImpl">
+        <property name="titleAndLogoDao" ref="titleAndLogoDao" />
+    </bean>
+</beans>

@@ -1,0 +1,18 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.chinasofti.crm.domain">
+    <class name="com.chinasofti.crm.domain.Log">
+        <id name="id" >
+            <generator class="identity" />
+        </id>
+        <property name="userId" />
+        <property name="userName" />
+        <property name="createtime" />
+        <property name="meothod" />
+        <property name="IP"/>
+        <property name="msg" />
+    </class>
+
+</hibernate-mapping>

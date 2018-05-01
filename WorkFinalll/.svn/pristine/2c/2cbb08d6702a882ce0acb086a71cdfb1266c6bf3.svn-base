@@ -1,0 +1,39 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!--deptno dname loc-->
+<!--报价类映射文件！！！！-->
+<hibernate-mapping package="com.chinasofti.crm.domain">
+ <class name="Quotation">
+     <id name="quotationId">
+       <generator class="increment"/>
+     </id>
+     <property name="quotationSales" length="30">
+         <column name="quotationSales" sql-type="decimal(10,2)"/>
+             </property>
+     <property name="quotationImplementation" length="30">
+         <column name="quotationImplementation" sql-type="decimal(10,2)"/>
+     </property>
+     <property name="quotationService" length="30">
+         <column name="quotationService" sql-type="decimal(10,2)"/>
+     </property>
+     <property name="quotationSpecialservice" length="30">
+         <column name="quotationSpecialservice" sql-type="decimal(10,2)"/>
+     </property>
+     <property name="quotationBudget" length="30">
+         <column name="quotationBudget" sql-type="decimal(10,2)"/>
+     </property>
+     <property name="quotationTotal" length="30">
+         <column name="quotationTotal" sql-type="decimal(10,2)"/>
+     </property>
+     <property name="quotationStatus" length="30"/>
+     <property name="quotationCreater" length="30"/>
+     <property name="processor" length="10"/>
+     <property name="clientName" length="20"/>
+     <property name="goodsName" length="200"/>
+     <property name="orderId" length="20" type="int"/>
+     <property name="pinyin" length="20"/>
+     <property name="quotationCreaterNo" type="int"/>
+     <property name="processorNo" type="int"/>
+ </class>
+    </hibernate-mapping>

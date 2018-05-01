@@ -1,0 +1,22 @@
+html,body{
+    margin: 0 auto;
+
+}
+.admin-main{
+    width: 100%;
+    height: auto;
+}
+#main{
+    width: 85%;
+    height: 100%;
+    margin: 0 auto;
+}
+.title1{
+    height: 30px;
+    font-weight: 500;
+    font-size: 30px;
+    color: #1AA094;
+}
+.layui-btn-group{
+    float: right;
+}

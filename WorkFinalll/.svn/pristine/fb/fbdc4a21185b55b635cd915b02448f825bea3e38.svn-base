@@ -1,0 +1,38 @@
+package com.chinasofti.crm.vo;
+
+/**
+ * Created by fzm on 2017/8/10.
+ */
+//临时对象
+public class Vo {
+
+    //临时名称
+    private  String voName;
+    //临时数量
+    private  Long  voNum;
+
+    public Vo() {
+
+    }
+
+    public Vo(String voName, Long voNum) {
+        this.voName = voName;
+        this.voNum = voNum;
+    }
+
+    public String getVoName() {
+        return voName;
+    }
+
+    public void setVoName(String voName) {
+        this.voName = voName;
+    }
+
+    public Long getVoNum() {
+        return voNum;
+    }
+
+    public void setVoNum(Long voNum) {
+        this.voNum = voNum;
+    }
+}

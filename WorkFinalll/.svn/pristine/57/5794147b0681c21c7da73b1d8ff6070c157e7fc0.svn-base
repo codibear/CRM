@@ -1,0 +1,17 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!--库存-->
+<hibernate-mapping package="com.chinasofti.crm.domain">
+    <class name="Stock">
+        <id name="stockId">
+            <!--指定的-->
+            <generator class="increment"/>
+        </id>
+        <property name="goodsName" length="30" />
+        <property name="wareHouse"  length="30" />
+        <property name="goodsLocal" length="50" />
+        <property name="totalNum" length="30" />
+        <property name="stockDesc" length="100" />
+    </class>
+</hibernate-mapping>

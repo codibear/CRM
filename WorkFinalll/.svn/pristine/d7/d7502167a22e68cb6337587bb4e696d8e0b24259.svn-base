@@ -1,0 +1,145 @@
+/*整体*/
+#admin-main{
+    width: 100%;
+    height: auto;
+    /*background: url("../images/bg.jpg") no-repeat;*/
+    background: #F6F6F6;
+}
+/*包含整体*/
+#main{
+    width: 90%;
+   height:auto;
+    margin: 0 auto;
+
+    /*background: #FFFFFF;*/
+}
+/*头部------------------------------------*/
+#header{
+    width: 100%;
+    height: 150px;
+    /*margin: 0 auto;*/
+    margin-bottom: 10px;
+    /*background-color: #9cc2cb;*/
+    background: url("../../images/bg.jpg");
+}
+/*logo 设计*/
+#logo{
+    font-size: 100px;
+    color: #1AA094;
+    width: 30%;
+    height: 100%;
+    align-content: center;
+    padding-left: 10%;
+    float: left;
+}
+/*右侧*/
+#headerRight{
+    width: 55%;
+    float: left;
+}
+/*右侧上方导航*/
+#navs{
+    width: 100%;
+    height: 25%;
+    margin: 10px 10px;
+}
+#navs ul{
+    margin-top: 10px;
+    float: right;
+    list-style: none;
+}
+#navs li{
+    font-size: 18px;
+
+}
+
+/*轮播图模块*/
+#conDiv1{
+    width: 100%;
+    height: 400px;
+    background-color: #F6F6F6;
+}
+/*主体内容--------------------------------------------------------*/
+#cont{
+    width: 100%;
+    height: 300px;
+}
+/*日历-------------------------*/
+#conDiv2{
+    width: 30%;
+    height: 300px;
+    float: left;
+    /*margin: 0 0;*/
+}
+
+/*新闻----------------------------------*/
+#conDiv3{
+    width: 70%;
+    height: 300px;
+    float: left;
+    margin: 0 auto;
+}
+/*新闻头部*/
+#newsHead{
+    width: 100%;
+    height: 40px;
+    background-color: #9cc2cb;
+    padding-left: 22px;
+}
+/*新闻标题*/
+#newsKey {
+    display: block;
+    width: 100%;
+    height: 35px;
+    font-size: 27px;
+    color: white;
+}
+/*新闻内容*/
+#newsContent{
+    width: 100%;
+    height: 250px;
+    padding-left: 20px;
+    background: #FFFFFF;
+}
+/*新闻a标签*/
+.newsA{
+    font-size: 20px;
+    color: #000000;
+}
+#conDiv3 a:hover{
+    color: #F00;
+    text-decoration: none;
+}
+.topNews{
+    font-size: 16px;
+    color: #2B2E37;
+}
+
+/*底部------------------------------------------*/
+#conDiv4{
+    width: 100%;
+    height: 100px;
+    text-align: center;
+    line-height: 30px;
+    margin-top: 10px;
+    padding-top: 20px;
+    border-top:solid 1px #E1E1E1;
+    background-color: #9cc2cb;
+}
+#conDiv4 a{
+    color: #666;
+    text-decoration: none;
+    font-family: "SimSun";
+    font-size: 14px;
+}
+#conDiv4 a:hover{
+    color: #F00;
+}
+p{
+    color: #666;
+    font-family: "SimSun";
+    font-size: 14px;
+}
+a{
+    list-style: none;
+}

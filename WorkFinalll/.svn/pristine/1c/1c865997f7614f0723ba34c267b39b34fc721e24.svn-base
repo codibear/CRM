@@ -1,0 +1,32 @@
+package com.chinasofti.crm.utils;
+
+import com.chinasofti.crm.action.sysManage.MySqlAction;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+import org.springframework.scheduling.quartz.QuartzJobBean;
+
+/**
+ * Created by Administrator on 2017/8/16.
+ */
+public class FristScheduledJob extends QuartzJobBean {
+    private Mybean mybean;
+
+    protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
+        System.out.println("1111111111222222222223333333333333");
+        MySqlAction mySqlAction =new MySqlAction();
+        try {
+            mySqlAction.exportDatabaseTool();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        this.mybean.printMessage();
+    }
+
+    public Mybean getMybean() {
+        return mybean;
+    }
+
+    public void setMybean(Mybean mybean) {
+        this.mybean = mybean;
+    }
+}

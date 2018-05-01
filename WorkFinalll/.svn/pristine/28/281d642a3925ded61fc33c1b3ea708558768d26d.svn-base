@@ -1,0 +1,43 @@
+
+#log4j.properties
+log4j.rootLogger=DEBUG,stdout,logfile
+
+#关闭框架以及数据链接池中的默认日志，只输出自定义的日志
+#log4j.logger.org.springframework=OFF
+#log4j.logger.org.apache.struts2=OFF
+#log4j.logger.com.opensymphony.xwork2=OFF
+#log4j.logger.com.mchange.v2.log.MLog=OFF
+#log4j.logger.com.mchange.v2.c3p0=OFF
+#log4j.logger.com.ibatis=OFF
+#log4j.logger.c3p0=OFF
+#log4j.logger.com.googlecode.xmemcached=OFF
+#log4j.logger.org.hibernate=OFF
+
+#控制台输出
+#log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+#log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+#log4j.appender.stdout.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} %p [%c] - - <%m>%n
+########################
+# JDBC Appender
+#数据库输出
+#######################
+#log4j.appender.db=org.apache.log4j.jdbc.JDBCAppender
+#log4j.appender.db.BufferSize=1
+##log4j.appender.db.docommit=Y
+#log4j.appender.db.driver=com.mysql.jdbc.Driver
+##log4j.appender.db.URL=jdbc:mysql:///test?characterEncoding=UTF-8
+##log4j.appender.db.user=root
+##log4j.appender.db.password=root
+#log4j.appender.db.URL=jdbc:mysql://192.168.110.254/crm?characterEncoding=UTF-8
+#log4j.appender.db.user=fengzhengmin
+#log4j.appender.db.password=fengzhengmin
+#log4j.appender.db.sql=insert into log(userId,userName,createTime,Meothod,IP,MSG) values ('%X{userId}','%X{userName}','%d{yyyy-MM-dd HH:mm:ss}','%M','%X{IP}','%m')
+#log4j.appender.db.layout=org.apache.log4j.PatternLayout
+
+输出到文件夹
+log4j.appender.logfile=org.apache.log4j.DailyRollingFileAppender
+log4j.appender.logfile.File=${DOC.ROOT}/logs/sys/stdout
+log4j.appender.logfile.DatePattern='.'yyyy-MM-dd'.log'
+log4j.appender.logfile.layout=org.apache.log4j.PatternLayout
+log4j.appender.logfile.layout.ConversionPattern=%d %p - %m%n
+log4j.appender.logfile.Encoding=utf-8
